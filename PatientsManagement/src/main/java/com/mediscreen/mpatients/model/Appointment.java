@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,7 +22,7 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    private LocalDate appointmentStartDate;
+    private LocalDateTime appointmentStartDate;
     private int durationInMinutes;
     private String doctor;
     private String status;

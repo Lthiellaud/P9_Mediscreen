@@ -2,6 +2,7 @@ package com.mediscreen.mpatients.service.implementation;
 
 import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.exception.NotFoundException;
+import com.mediscreen.mpatients.model.DTO.PatientDTO;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.repository.PatientRepository;
 import com.mediscreen.mpatients.service.PatientService;
@@ -38,42 +39,57 @@ public class PatientServiceImpl implements PatientService {
 
     /**
      * Pour créer un patient / lance une exception si le patient existe déjà
-     * @param patient
+     * @param patientDTO
+     * @return Le patient créé
      */
     @Override
-    public void createPatient(Patient patient) {
+    public Patient createPatient(PatientDTO patientDTO) {
         Optional<Patient> savedPatient = patientRepository
-                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName(), patient.getLastName()
-                        , patient.getBirthDate(), patient.getSex());
+                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patientDTO.getFirstName(), patientDTO.getLastName()
+                        , patientDTO.getBirthDate(), patientDTO.getSex());
 
         if (savedPatient.isPresent()) {
-            throw new AlreadyExistException("Le patient " + patient.getFirstName() + " " + patient.getLastName()
-                    + ", né le " + patient.getBirthDate() + " - sexe " + patient.getSex() + " - existe déjà. Id : "
+            throw new AlreadyExistException("Le patient " + patientDTO.getFirstName() + " " + patientDTO.getLastName()
+                    + ", né le " + patientDTO.getBirthDate() + " - sexe " + patientDTO.getSex() + " - existe déjà. Id : "
                     + savedPatient.get().getPatientId());
         }
-        patientRepository.save(patient);
+        return patientRepository.save(fromDtoToPatient(patientDTO) );
 
     }
 
+    private static Patient fromDtoToPatient(PatientDTO patientDTO) {
+        Patient patient = new Patient();
+        patient.setFirstName(patientDTO.getFirstName());
+        patient.setLastName(patientDTO.getLastName());
+        patient.setBirthDate(patientDTO.getBirthDate());
+        patient.setSex(patientDTO.getSex());
+        patient.setHomeAddress(patientDTO.getHomeAddress());
+        patient.setPhoneNumber(patientDTO.getPhoneNumber());
+        return patient;
+    }
     /**
      * Pour mettre à jour les données administratives d'un patient
-     * @param patient
+     * @param patientDTO
+     * @return Patient mis à jour
      */
     @Override
-    public void updatePatient(Patient patient) {
+    public Patient updatePatient(PatientDTO patientDTO, Long id) {
         //Vérifie si la clé unique est modifiée et les nouvelles données ne sont pas déjà utilisées
         Optional<Patient> savedPatient = patientRepository
-                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName(), patient.getLastName()
-                        , patient.getBirthDate(), patient.getSex());
+                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patientDTO.getFirstName(), patientDTO.getLastName()
+                        , patientDTO.getBirthDate(), patientDTO.getSex());
 
-        if (savedPatient.isPresent() && savedPatient.get().getPatientId() != patient.getPatientId()) {
-            throw new AlreadyExistException("Le patient " + patient.getFirstName() + " " + patient.getLastName()
-                    + ", né le " + patient.getBirthDate() + " - sexe " + patient.getSex()
-                    + " - existe déjà sous un id différent. Id à mettre à jour : " + patient.getPatientId()
+        if (savedPatient.isPresent() && savedPatient.get().getPatientId() != id) {
+            throw new AlreadyExistException("Le patient " + patientDTO.getFirstName() + " " + patientDTO.getLastName()
+                    + ", né le " + patientDTO.getBirthDate() + " - sexe " + patientDTO.getSex()
+                    + " - existe déjà sous un id différent. Id à mettre à jour : " + id
                     + " / id en base : " + savedPatient.get().getPatientId());
         }
 
-        patientRepository.save(patient);
+        Patient patient = fromDtoToPatient(patientDTO);
+        patient.setPatientId(id);
+
+        return patientRepository.save(patient);
     }
 
     /**
