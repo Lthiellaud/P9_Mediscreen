@@ -11,6 +11,14 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
+    /**
+     * Pour récupérer un patient à partir de la clé unique de la table patient
+     * @param firstName prénom
+     * @param lastName nom
+     * @param birthDate date de naissance
+     * @param sex sexe
+     * @return Optional patient
+     */
     Optional<Patient> findPatientByFirstNameAndLastNameAndBirthDateAndSex(String firstName, String lastName,
                                                                           LocalDate birthDate, String sex);
 }
