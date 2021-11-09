@@ -22,9 +22,19 @@ public class PatientController {
         return patientService.getAllPatient();
     }
 
+    @GetMapping(value="/patient/patientById")
+    public Patient getPatientById (@RequestParam Long id){
+        return patientService.getPatientById(id);
+    }
+
+    @GetMapping(value="/patient/patientByName")
+    public List<Patient> getPatientById (@RequestParam String lastName){
+        return patientService.getPatientByLastName(lastName);
+    }
+
     @PostMapping(value = "/patient/addPatient")
-    public Patient addPatient(@RequestBody PatientDTO patientDTO) {
-        return patientService.createPatient(patientDTO);
+    public ResponseEntity<Patient> addPatient(@RequestBody PatientDTO patientDTO) {
+        return new ResponseEntity<>(patientService.createPatient(patientDTO), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/patient/updatePatient")

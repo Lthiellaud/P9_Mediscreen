@@ -9,6 +9,7 @@ import com.mediscreen.mpatients.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class PatientServiceImpl implements PatientService {
 
     /**
      * Pour trouver un patient par son id
-     * @param id
+     * @param id id
      * @return le patient s'il a été trouvé / lance une exception sinon
      */
     @Override
@@ -38,8 +39,18 @@ public class PatientServiceImpl implements PatientService {
     }
 
     /**
+     * Pour trouver un patient par son nom de famille
+     * @param lastName nom
+     * @return la liste de patient
+     */
+    @Override
+    public List<Patient> getPatientByLastName(String lastName) {
+        return patientRepository.findByLastName(lastName);
+    }
+
+    /**
      * Pour créer un patient / lance une exception si le patient existe déjà
-     * @param patientDTO
+     * @param patientDTO les données du patient
      * @return Le patient créé
      */
     @Override
@@ -59,17 +70,17 @@ public class PatientServiceImpl implements PatientService {
 
     private static Patient fromDtoToPatient(PatientDTO patientDTO) {
         Patient patient = new Patient();
-        patient.setFirstName(patientDTO.getFirstName());
-        patient.setLastName(patientDTO.getLastName());
+        patient.setFirstName(patientDTO.getFirstName().trim());
+        patient.setLastName(patientDTO.getLastName().trim());
         patient.setBirthDate(patientDTO.getBirthDate());
-        patient.setSex(patientDTO.getSex());
-        patient.setHomeAddress(patientDTO.getHomeAddress());
-        patient.setPhoneNumber(patientDTO.getPhoneNumber());
+        patient.setSex(patientDTO.getSex().trim());
+        patient.setHomeAddress(patientDTO.getHomeAddress().trim());
+        patient.setPhoneNumber(patientDTO.getPhoneNumber().trim());
         return patient;
     }
     /**
      * Pour mettre à jour les données administratives d'un patient
-     * @param patientDTO
+     * @param patientDTO les données du patient
      * @return Patient mis à jour
      */
     @Override
@@ -94,7 +105,7 @@ public class PatientServiceImpl implements PatientService {
 
     /**
      * Pour supprimer un patient identifié par son id/ lance une exception si le patient n'a pas été trouvé
-     * @param id
+     * @param id id
      */
     @Override
     public void deletePatient(Long id) {
