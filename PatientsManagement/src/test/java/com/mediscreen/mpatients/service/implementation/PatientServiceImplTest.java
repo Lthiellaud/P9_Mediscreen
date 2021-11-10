@@ -50,7 +50,7 @@ class PatientServiceImplTest {
     void createPatient() {
         when(patientRepository.findPatientByFirstNameAndLastNameAndBirthDateAndSex("Ferguson", "Lucas"
                 , LocalDate.of(1980, 1, 1), "M")).thenReturn(Optional.of(existingPatient));
-        Exception exception = assertThrows(AlreadyExistException.class, () -> patientService.createPatient(patientDTO));
+        Exception exception = assertThrows(AlreadyExistException.class, () -> patientService.createPatientDTO(patientDTO));
 
         assertThat(exception.getMessage()).isEqualTo("Le patient Ferguson Lucas, né le 1980-01-01 - sexe M - existe déjà. Id : 1");
     }

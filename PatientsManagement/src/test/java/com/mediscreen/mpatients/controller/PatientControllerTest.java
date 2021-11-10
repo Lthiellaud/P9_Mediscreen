@@ -2,6 +2,7 @@ package com.mediscreen.mpatients.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.model.DTO.PatientDTO;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.service.implementation.PatientServiceImpl;
@@ -21,6 +22,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -55,16 +57,47 @@ class PatientControllerTest {
     }
 
     @Test
-    public void addPatientTest() throws Exception {
+    public void addPatientDTOTest() throws Exception {
         mapper.registerModule(new JavaTimeModule());
-        when(patientService.createPatient(patientToBeAdded)).thenReturn(createdPatient);
+        when(patientService.createPatientDTO(patientToBeAdded)).thenReturn(createdPatient);
         RequestBuilder createRequest = MockMvcRequestBuilders
                 .post("/patient/addPatient")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(patientToBeAdded));
 
         mockMvc.perform(createRequest)
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated())
+                .andDo(print());
+    }
+
+    @Test
+    public void addPatientTest() throws Exception {
+
+        mockMvc.perform(post("/patient/add").param("family","New")
+                .param("given","Patient")
+                .param("dob","1980-01-01")
+                .param("sex","M")
+                .param("address","2 Warren Street ")
+                .param("phone","387-866-1399"))
+                .andExpect(status().isCreated())
+                .andDo(print());
+    }
+
+    @Test
+    public void addPatientExistingTest() throws Exception {
+
+        when(patientService.createPatient("New","Patient"
+                , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399"))
+                .thenThrow(new AlreadyExistException("Patient existe déjà"));
+
+        mockMvc.perform(post("/patient/add").param("family","New")
+                .param("given","Patient")
+                .param("dob","1980-01-01")
+                .param("sex","M")
+                .param("address","2 Warren Street ")
+                .param("phone","387-866-1399"))
+                .andExpect(status().isConflict())
+                .andDo(print());
     }
 
     @Test

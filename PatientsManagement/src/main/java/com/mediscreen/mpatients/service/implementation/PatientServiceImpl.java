@@ -9,6 +9,7 @@ import com.mediscreen.mpatients.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,13 +49,20 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.findByLastName(lastName);
     }
 
+    @Override
+    public Patient createPatient(String lastName, String firstName, LocalDate birthDate, String sex, String address, String phone) {
+
+        return createPatientDTO(new PatientDTO(lastName, firstName, birthDate, sex, address, phone));
+
+    }
+
     /**
      * Pour créer un patient / lance une exception si le patient existe déjà
      * @param patientDTO les données du patient
      * @return Le patient créé
      */
     @Override
-    public Patient createPatient(PatientDTO patientDTO) {
+    public Patient createPatientDTO(PatientDTO patientDTO) {
         Optional<Patient> savedPatient = patientRepository
                 .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patientDTO.getFirstName(), patientDTO.getLastName()
                         , patientDTO.getBirthDate(), patientDTO.getSex());
