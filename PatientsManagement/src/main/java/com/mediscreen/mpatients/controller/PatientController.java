@@ -1,11 +1,8 @@
 package com.mediscreen.mpatients.controller;
 
-import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.model.DTO.PatientDTO;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.service.PatientService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -33,24 +30,26 @@ public class PatientController {
     }
 
     @GetMapping(value="/patient/patientByName")
-    public List<Patient> getPatientById (@RequestParam String lastName){
+    public List<Patient> getPatientById(@RequestParam String lastName){
         return patientService.getPatientByLastName(lastName);
     }
 
     @PostMapping(value = "/patient/addPatient")
-    public ResponseEntity<Patient> addPatientDTO(@RequestBody PatientDTO patientDTO) {
-        return new ResponseEntity<>(patientService.createPatientDTO(patientDTO), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Patient addPatientDTO(@RequestBody PatientDTO patientDTO) {
+        return patientService.createPatientDTO(patientDTO);
     }
 
     @PostMapping(value = "/patient/add")
-    public ResponseEntity<Patient> addPatient(@RequestParam("family") String lastName,
+    @ResponseStatus(HttpStatus.CREATED)
+    public Patient addPatient(@RequestParam("family") String lastName,
                                         @RequestParam("given") String firstName,
                                         @RequestParam ("dob") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
                                         @RequestParam String sex,
                                         @RequestParam String address,
                                         @RequestParam String phone) {
 
-        return new ResponseEntity<>(patientService.createPatient(lastName, firstName, birthDate, sex, address, phone), HttpStatus.CREATED);
+        return patientService.createPatient(lastName, firstName, birthDate, sex, address, phone);
 
     }
     @PutMapping(value = "/patient/updatePatient")
@@ -59,9 +58,9 @@ public class PatientController {
     }
 
     @DeleteMapping(value = "/patient/deletePatient")
-    public ResponseEntity<?> deletePatient(@RequestParam Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePatient(@RequestParam Long id) {
         patientService.deletePatient(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 

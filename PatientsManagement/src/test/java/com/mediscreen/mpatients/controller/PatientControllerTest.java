@@ -84,6 +84,19 @@ class PatientControllerTest {
     }
 
     @Test
+    public void addPatientBadRequestTest() throws Exception {
+
+        mockMvc.perform(post("/patient/add").param("family","New")
+                .param("given","Patient")
+                .param("dob","1980-15-01")
+                .param("sex","M")
+                .param("address","2 Warren Street ")
+                .param("phone","387-866-1399"))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
     public void addPatientExistingTest() throws Exception {
 
         when(patientService.createPatient("New","Patient"

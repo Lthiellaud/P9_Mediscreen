@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Home</title>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+<div class="container">
+	<div class="row"><h2>Liste des Patients</h2></div>
+	<div class="row">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Prénom</th>
+					<th>Nom</th>
+					<th>Date de naissance</th>
+					<th>Genre</th>
+					<th>Adresse</th>
+					<th>Téléphone</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${#lists.isEmpty(patients)}">
+					<td colspan="6">Aucun Patient enregistré</td>
+				</tr>
+				<tr th:each="patient :${patients}">
+					<td><span th:text="${patient.patientId}"> Id </span></td>
+					<td><span th:text="${patient.firstName}"> Prénom </span></td>
+					<td><span th:text="${patient.lastName}"> Nom </span></td>
+					<td><span th:text="${patient.birthDate}"> Date de naissance </span></td>
+					<td><span th:text="${patient.sex}"> Genre </span></td>
+					<td><span th:text="${patient.homeAddress}"> Adresse </span></td>
+					<td><span th:text="${patient.phoneNumber}"> Téléphone </span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>
