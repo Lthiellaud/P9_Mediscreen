@@ -19,17 +19,17 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping(value="/patient/allPatients")
+    @GetMapping(value = "/patient/allPatients")
     public List<Patient> getAllPatient (){
         return patientService.getAllPatient();
     }
 
-    @GetMapping(value="/patient/patientById")
-    public Patient getPatientById (@RequestParam Long id){
+    @GetMapping(value = "/patient/patientById/{id}")
+    public Patient getPatientById (@PathVariable Long id){
         return patientService.getPatientById(id);
     }
 
-    @GetMapping(value="/patient/patientByName")
+    @GetMapping(value = "/patient/patientByName")
     public List<Patient> getPatientById(@RequestParam String lastName){
         return patientService.getPatientByLastName(lastName);
     }
@@ -52,14 +52,14 @@ public class PatientController {
         return patientService.createPatient(lastName, firstName, birthDate, sex, address, phone);
 
     }
-    @PutMapping(value = "/patient/updatePatient")
-    public Patient updatePatient(@RequestParam Long id, @RequestBody PatientDTO patientDTO) {
+    @PutMapping(value = "/patient/updatePatient/{id}")
+    public Patient updatePatient(@PathVariable("id") Long id, @RequestBody PatientDTO patientDTO) {
         return patientService.updatePatient(patientDTO, id);
     }
 
-    @DeleteMapping(value = "/patient/deletePatient")
+    @DeleteMapping(value = "/patient/deletePatient/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePatient(@RequestParam Long id) {
+    public void deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
     }
 

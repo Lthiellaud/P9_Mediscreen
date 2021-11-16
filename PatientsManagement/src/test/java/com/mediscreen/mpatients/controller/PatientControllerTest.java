@@ -114,10 +114,26 @@ class PatientControllerTest {
     }
 
     @Test
-    public void updatePatientTest() throws Exception {
+    public void updatePatientBadRequestTest() throws Exception {
         mapper.registerModule(new JavaTimeModule());
         RequestBuilder createRequest = MockMvcRequestBuilders
-                .put("/patient/updatePatient?id=")
+                .put("/patient/updatePatient/f")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(patientToBeAdded));
+
+        mockMvc.perform(createRequest)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updatePatientTest() throws Exception {
+        mapper.registerModule(new JavaTimeModule());
+        when(patientService.createPatient("New","Patient"
+                , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399"))
+                .thenThrow(new AlreadyExistException("Patient existe déjà"));
+
+        RequestBuilder createRequest = MockMvcRequestBuilders
+                .put("/patient/updatePatient/f")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(patientToBeAdded));
 
