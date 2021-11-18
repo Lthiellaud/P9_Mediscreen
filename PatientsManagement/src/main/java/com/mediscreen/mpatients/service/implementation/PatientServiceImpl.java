@@ -2,7 +2,6 @@ package com.mediscreen.mpatients.service.implementation;
 
 import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.exception.NotFoundException;
-import com.mediscreen.mpatients.model.DTO.PatientDTO;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.repository.PatientRepository;
 import com.mediscreen.mpatients.service.PatientService;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +32,7 @@ public class PatientServiceImpl implements PatientService {
      * @return le patient s'il a été trouvé / lance une exception sinon
      */
     @Override
-    public Patient getPatientById(Long id) {
+    public Patient getPatientById(Integer id) {
         return patientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Patient Id " + id + " non trouvé "));
     }
@@ -49,64 +47,50 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.findByLastName(lastName);
     }
 
-    @Override
-    public Patient createPatient(String lastName, String firstName, LocalDate birthDate, String sex, String address, String phone) {
-
-        return createPatientDTO(new PatientDTO(lastName, firstName, birthDate, sex, address, phone));
-
-    }
-
     /**
      * Pour créer un patient / lance une exception si le patient existe déjà
-     * @param patientDTO les données du patient
+     * @param lastName Nom
+     * @param firstName Prénom
+     * @param birthDate Date de naissance
+     * @param sex genre
+     * @param address Adresse
+     * @param phone Téléphone
      * @return Le patient créé
      */
     @Override
-    public Patient createPatientDTO(PatientDTO patientDTO) {
+    public Patient createPatient(String lastName, String firstName, LocalDate birthDate, String sex, String address, String phone) {
         Optional<Patient> savedPatient = patientRepository
-                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patientDTO.getFirstName(), patientDTO.getLastName()
-                        , patientDTO.getBirthDate(), patientDTO.getSex());
-
+                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(firstName.trim(), lastName.trim()
+                        , birthDate, sex.trim());
         if (savedPatient.isPresent()) {
-            throw new AlreadyExistException("Le patient " + patientDTO.getFirstName() + " " + patientDTO.getLastName()
-                    + ", né le " + patientDTO.getBirthDate() + " - sexe " + patientDTO.getSex() + " - existe déjà. Id : "
-                    + savedPatient.get().getPatientId());
+            throw new AlreadyExistException("Le patient existe deja sous l'id : " + savedPatient.get().getPatientId());
         }
-        return patientRepository.save(fromDtoToPatient(patientDTO) );
-
-    }
-
-    private static Patient fromDtoToPatient(PatientDTO patientDTO) {
         Patient patient = new Patient();
-        patient.setFirstName(patientDTO.getFirstName().trim());
-        patient.setLastName(patientDTO.getLastName().trim());
-        patient.setBirthDate(patientDTO.getBirthDate());
-        patient.setSex(patientDTO.getSex().trim());
-        patient.setHomeAddress(patientDTO.getHomeAddress().trim());
-        patient.setPhoneNumber(patientDTO.getPhoneNumber().trim());
-        return patient;
+        patient.setFirstName(firstName.trim());
+        patient.setLastName(lastName.trim());
+        patient.setBirthDate(birthDate);
+        patient.setSex(sex.trim());
+        patient.setHomeAddress(address.trim());
+        patient.setPhoneNumber(phone.trim());
+        return patientRepository.save(patient);
+
     }
+
     /**
      * Pour mettre à jour les données administratives d'un patient
-     * @param patientDTO les données du patient
+     * @param patient les données du patient
      * @return Patient mis à jour
      */
     @Override
-    public Patient updatePatient(PatientDTO patientDTO, Long id) {
+    public Patient updatePatient(Patient patient) throws AlreadyExistException {
         //Vérifie si la clé unique est modifiée et les nouvelles données ne sont pas déjà utilisées
         Optional<Patient> savedPatient = patientRepository
-                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patientDTO.getFirstName(), patientDTO.getLastName()
-                        , patientDTO.getBirthDate(), patientDTO.getSex());
+                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName(), patient.getLastName()
+                        , patient.getBirthDate(), patient.getSex());
 
-        if (savedPatient.isPresent() && savedPatient.get().getPatientId() != id) {
-            throw new AlreadyExistException("Le patient " + patientDTO.getFirstName() + " " + patientDTO.getLastName()
-                    + ", né le " + patientDTO.getBirthDate() + " - sexe " + patientDTO.getSex()
-                    + " - existe déjà sous un id différent. Id à mettre à jour : " + id
-                    + " / id en base : " + savedPatient.get().getPatientId());
+        if (savedPatient.isPresent() && !savedPatient.get().getPatientId().equals(patient.getPatientId())) {
+            throw new AlreadyExistException("Le patient existe deja sous l'id : " + savedPatient.get().getPatientId());
         }
-
-        Patient patient = fromDtoToPatient(patientDTO);
-        patient.setPatientId(id);
 
         return patientRepository.save(patient);
     }
@@ -116,7 +100,12 @@ public class PatientServiceImpl implements PatientService {
      * @param id id
      */
     @Override
-    public void deletePatient(Long id) {
+    public void deletePatient(Integer id) {
         patientRepository.delete(getPatientById(id));
+    }
+
+    @Override
+    public Patient createPatient2(Patient patient) {
+        return patientRepository.save(patient);
     }
 }

@@ -1,78 +1,85 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+    <meta charset="utf-8"/>
+    <title>Home</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
+    <div class="row">
+        <h2>Mise à jour du patient</h2>
+    </div>
 
-	<div class="row">
-		<h2>Mettre à jour un Patient</h2>
-	</div>
-	<div class="row">
-		<p th:if="${message != null}" th:utext="${message}" style="color: red;">Result message</p>
-	</div>
+    <div class="row">
+        <form action="#" th:action="@{/patient/update/{id}(id=${patient.patientId})}"
+              th:object="${patient}" method="post" class="form-horizontal" style="width: 100%">
+            <div class="form-group">
+                <label for="lastName" class="col-sm-2 control-label">Nom</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Nom"
+                           class="col-4">
+                    <p class="text-danger" th:if="${#fields.hasErrors('lastName')}"
+                       th:errors="*{lastName}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstName" class="col-sm-2 control-label">Prénom</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{firstName}" id="firstName" placeholder="Prénom"
+                           class="col-4">
+                    <p class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+                       th:errors="*{firstName}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="birthDate" class="col-sm-3 control-label">Date de Naissance</label>
+                <div class="col-sm-10">
+                    <input type="date" th:field="*{birthDate}" id="birthDate" class="col-4">
+                    <p class="text-danger" th:if="${#fields.hasErrors('birthDate')}"
+                       th:errors="*{birthDate}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sex" class="col-sm-2 control-label">Genre</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{sex}" id="sex" placeholder="Genre (M or F)"
+                           class="col-4">
+                    <p class="text-danger" th:if="${#fields.hasErrors('sex')}"
+                       th:errors="*{sex}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="homeAddress" class="col-sm-2 control-label">Adresse</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{homeAddress}" id="homeAddress"
+                           placeholder="Adresse" class="col-4">
+                    <p class="text-danger" th:if="${#fields.hasErrors('homeAddress')}"
+                       th:errors="*{homeAddress}"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber" class="col-sm-2 control-label">Téléphone</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{phoneNumber}" id="phoneNumber"
+                           placeholder="Téléphone" class="col-4">
+                    <p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}"
+                       th:errors="*{phoneNumber}"></p>
+                </div>
+            </div>
 
 
-	<div class="row">
-		<form action="#" th:action="@{/patient/update/{id} (id=${patient.patientId})}" th:object="${patient}" method="put" class="form-horizontal" style="width: 100%">
-			<div class="form-group">
-				<label for="lastName" class="col-sm-2 control-label">Nom</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{lastName}" id="lastName" placeholder="Nom" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="firstName" class="col-sm-2 control-label">Prénom</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{firstName}" id="firstName" placeholder="Prénom" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="birthDate" class="col-sm-2 control-label">Date de Naissance</label>
-				<div class="col-sm-10">
-					<input type="date" th:field="*{birthDate}" id="birthDate" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="sex" class="col-sm-2 control-label">Genre</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{sex}" id="sex" placeholder="Genre (M or F)" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="homeAddress" class="col-sm-2 control-label">Adresse</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{homeAddress}" id="homeAddress" placeholder="Adresse" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('homeAddress')}" th:errors="*{homeAddress}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="phoneNumber" class="col-sm-2 control-label">Téléphone</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{phoneNumber}" id="phoneNumber" placeholder="Téléphone" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></p>
-				</div>
-			</div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a class="btn btn-danger btn-sm" href="/patient/list">Annuler</a>
+                    <input class="btn btn-primary btn-sm" type="submit" value="Mettre à jour">
+                </div>
+            </div>
 
+        </form>
 
-			<div class="form-group">
-				<div class="col-sm-12">
-					<a class="btn btn-danger btn-sm" href="/patient/list">Annuler</a>
-					<input class="btn btn-primary btn-sm" type="submit" value="Mettre à jour">
-				</div>
-			</div>
-
-		</form>
-	</div>
-
+    </div>
 </div>
 </body>
 </html>
