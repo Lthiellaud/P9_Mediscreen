@@ -1,36 +1,32 @@
-package com.mediscreen.mpatients.controller;
+package com.mediscreen.mpatients.integration;
 
-import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.model.Patient;
-import com.mediscreen.mpatients.service.implementation.PatientServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = PatientController.class)
-class PatientControllerTest {
 
-    @MockBean
-    private PatientServiceImpl patientService;
+@SpringBootTest
+@ActiveProfiles("test")
+@AutoConfigureMockMvc
+public class PatientControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,18 +39,8 @@ class PatientControllerTest {
     private static final Patient createdPatient = new Patient(1, "New","Patient"
             , LocalDate.of(1980, 1, 1), "M", "2 Warren Street", "387-866-1399");
 
-    @BeforeEach
-    public void initTest() {
-        patientToBeAdded.setPatientId(2);
-        patientToBeAdded.setFirstName("New");
-        patientToBeAdded.setLastName("Patient");
-        patientToBeAdded.setBirthDate(LocalDate.of(1980, 1, 1));
-        patientToBeAdded.setSex("M");
-    }
-
     @Test
     public void getAllPatientsTest() throws Exception {
-        when(patientService.getAllPatient()).thenReturn(Arrays.asList(existingPatient));
         mockMvc.perform(get("/patient/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -64,9 +50,6 @@ class PatientControllerTest {
 
     @Test
     public void addPatientTest() throws Exception {
-        when(patientService.createPatient("New","Patient"
-                , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399"))
-            .thenReturn(createdPatient);
         mockMvc.perform(post("/patient/add").param("family","New")
                 .param("given","Patient")
                 .param("dob","1980-01-01")
@@ -82,8 +65,7 @@ class PatientControllerTest {
     @Test
     public void addPatientBadRequestTest() throws Exception {
 
-        mockMvc.perform(post("/patient/add")
-                .param("family","New")
+        mockMvc.perform(post("/patient/add").param("family","New")
                 .param("given","Patient")
                 .param("dob","1980-15-01")
                 .param("sex","M")
@@ -96,10 +78,6 @@ class PatientControllerTest {
     @Test
     public void addPatientExistingTest() throws Exception {
 
-        when(patientService.createPatient("New","Patient"
-                , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399"))
-                .thenThrow(new AlreadyExistException("Patient existe déjà"));
-
         mockMvc.perform(post("/patient/add").param("family","New")
                 .param("given","Patient")
                 .param("dob","1980-01-01")
@@ -108,6 +86,8 @@ class PatientControllerTest {
                 .param("phone","387-866-1399"))
                 .andExpect(status().isConflict())
                 .andDo(print());
+
+        assertThat("").isEqualTo("");
     }
 
     @Test
@@ -131,8 +111,6 @@ class PatientControllerTest {
 
     @Test
     public void updatePatientTest() throws Exception {
-        when(patientService.updatePatient(any(Patient.class)))
-                .thenThrow(new AlreadyExistException("Patient existe déjà"));
 
         RequestBuilder createRequest = MockMvcRequestBuilders
                 .put("/patient/update")
