@@ -2,6 +2,7 @@ package com.mediscreen.webapp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Patient {
 
     private Integer patientId;
@@ -22,7 +24,7 @@ public class Patient {
     @NotNull(message = "La date de naissance est obligatoire")
     @Past(message = "La date ne peut être dans le futur")
     private LocalDate birthDate;
-    @Pattern(regexp = "[MF]{1}",message = "Saisir M ou F")
+    @Pattern(regexp = "[MF]",message = "Saisir M ou F")
     private String sex;
     private String homeAddress;
     private String phoneNumber;
