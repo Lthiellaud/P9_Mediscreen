@@ -59,11 +59,12 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     public Patient createPatient(String lastName, String firstName, LocalDate birthDate, String sex, String address, String phone) {
+
         Optional<Patient> savedPatient = patientRepository
                 .findPatientByFirstNameAndLastNameAndBirthDateAndSex(firstName.trim(), lastName.trim()
                         , birthDate, sex.trim());
         if (savedPatient.isPresent()) {
-            throw new AlreadyExistException("patientId " + savedPatient.get().getPatientId() + " existe déjà avec ces mêmes données clé");
+            throw new AlreadyExistException("Un patient existe déjà avec ces mêmes données clé (patientId " + savedPatient.get().getPatientId()+ ")");
         }
         Patient patient = new Patient();
         patient.setFirstName(firstName.trim());
@@ -83,13 +84,16 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     public Patient updatePatient(Patient patient) {
+        //Vérifie si le patient existe bien (lance une exception sinon)
+        getPatientById(patient.getPatientId());
+
         //Vérifie si la clé unique est modifiée et les nouvelles données ne sont pas déjà utilisées
         Optional<Patient> savedPatient = patientRepository
                 .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName(), patient.getLastName()
                         , patient.getBirthDate(), patient.getSex());
 
         if (savedPatient.isPresent() && !savedPatient.get().getPatientId().equals(patient.getPatientId())) {
-            throw new AlreadyExistException("patientId " + savedPatient.get().getPatientId() + " existe déjà avec ces mêmes données clé");
+            throw new AlreadyExistException("Un patient existe déjà avec ces mêmes données clé (patientId " + savedPatient.get().getPatientId()+ ")");
         }
 
         return patientRepository.save(patient);
@@ -104,8 +108,4 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.delete(getPatientById(id));
     }
 
-    @Override
-    public Patient createPatient2(Patient patient) {
-        return patientRepository.save(patient);
-    }
 }

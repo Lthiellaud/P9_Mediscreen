@@ -57,19 +57,6 @@ public class PatientController {
     }
 
     /**
-     * Pour ajouter un patient
-     * @param patient le patient à ajouter
-     * @return le patient ajouté
-     */
-    @PostMapping(value = "/patient/add2")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Patient addPatient2(@RequestBody Patient patient) {
-
-        return patientService.createPatient2(patient);
-
-    }
-
-    /**
      * Pour mettre à jour un patient
      * @param patient le patient à mettre à jour
      * @return le patient mis à jour
