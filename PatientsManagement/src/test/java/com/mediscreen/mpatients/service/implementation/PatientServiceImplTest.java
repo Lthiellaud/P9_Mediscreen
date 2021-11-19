@@ -1,6 +1,7 @@
 package com.mediscreen.mpatients.service.implementation;
 
 import com.mediscreen.mpatients.exception.AlreadyExistException;
+import com.mediscreen.mpatients.exception.NotFoundException;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.repository.PatientRepository;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,5 +73,22 @@ class PatientServiceImplTest {
 
         assertThat(patient.getPatientId()).isEqualTo(existingPatient.getPatientId());
     }
+
+    @Test
+    void getPatientById() {
+        when(patientRepository.findById(1)).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(NotFoundException.class, () -> patientService.getPatientById(1));
+
+        assertThat(e.getMessage()).isEqualTo("patientId 1 non trouvé");
+    }
+
+    @Test
+    void getPatientByLastName() {
+        when(patientRepository.findByLastName("toto")).thenReturn(new ArrayList<>());
+
+        assertThat(patientService.getPatientByLastName("toto").size()).isEqualTo(0);
+    }
+
 
 }

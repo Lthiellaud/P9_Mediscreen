@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -25,6 +26,22 @@ public class PatientRepositoryIT {
                 , "Ferguson", LocalDate.of(1968, 6, 22), "M");
 
         assertThat(patient.isPresent()).isTrue();
-        assertThat(patient.get().getPatientId()).isEqualTo(1L);
+        assertThat(patient.get().getPatientId()).isEqualTo(1);
+    }
+
+    @Test
+    public void findByIdTest() {
+        Optional<Patient> patient = patientRepository.findById(1);
+
+        assertThat(patient.isPresent()).isTrue();
+        assertThat(patient.get().getPatientId()).isEqualTo(1);
+    }
+
+    @Test
+    public void findByLastNameTest() {
+        List<Patient> patients = patientRepository.findByLastName("Ferguson");
+
+        assertThat(patients.get(0).getPatientId()).isEqualTo(1);
+        assertThat(patients.size()).isEqualTo(1);
     }
 }

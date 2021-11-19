@@ -1,6 +1,5 @@
 package com.mediscreen.mpatients.service;
 
-import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.model.Patient;
 
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ public interface PatientService {
     Patient getPatientById(Integer id);
     List<Patient> getPatientByLastName(String lastName);
     Patient createPatient(String lastName, String firstName, LocalDate birthDate, String sex, String address, String phone);
-    Patient updatePatient(Patient patient) throws AlreadyExistException;
+    Patient updatePatient(Patient patient);
     void deletePatient(Integer id);
 
     Patient createPatient2(Patient patient);

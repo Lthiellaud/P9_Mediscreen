@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient getPatientById(Integer id) {
         return patientRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Patient Id " + id + " non trouvé "));
+                .orElseThrow(() -> new NotFoundException("patientId " + id + " non trouvé"));
     }
 
     /**
@@ -63,7 +63,7 @@ public class PatientServiceImpl implements PatientService {
                 .findPatientByFirstNameAndLastNameAndBirthDateAndSex(firstName.trim(), lastName.trim()
                         , birthDate, sex.trim());
         if (savedPatient.isPresent()) {
-            throw new AlreadyExistException("Le patient existe deja sous l'id : " + savedPatient.get().getPatientId());
+            throw new AlreadyExistException("patientId " + savedPatient.get().getPatientId() + " existe déjà avec ces mêmes données clé");
         }
         Patient patient = new Patient();
         patient.setFirstName(firstName.trim());
@@ -82,14 +82,14 @@ public class PatientServiceImpl implements PatientService {
      * @return Patient mis à jour
      */
     @Override
-    public Patient updatePatient(Patient patient) throws AlreadyExistException {
+    public Patient updatePatient(Patient patient) {
         //Vérifie si la clé unique est modifiée et les nouvelles données ne sont pas déjà utilisées
         Optional<Patient> savedPatient = patientRepository
                 .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName(), patient.getLastName()
                         , patient.getBirthDate(), patient.getSex());
 
         if (savedPatient.isPresent() && !savedPatient.get().getPatientId().equals(patient.getPatientId())) {
-            throw new AlreadyExistException("Le patient existe deja sous l'id : " + savedPatient.get().getPatientId());
+            throw new AlreadyExistException("patientId " + savedPatient.get().getPatientId() + " existe déjà avec ces mêmes données clé");
         }
 
         return patientRepository.save(patient);

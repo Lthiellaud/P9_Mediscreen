@@ -35,13 +35,13 @@ public class PatientController {
 
     /**
      * Pour ajouter un patient
-     * @param lastName
-     * @param firstName
-     * @param birthDate
-     * @param sex
-     * @param address
-     * @param phone
-     * @return
+     * @param lastName Nom
+     * @param firstName prénom
+     * @param birthDate date de naissance
+     * @param sex genre
+     * @param address adresse postale
+     * @param phone téléphone
+     * @return le patient ajouté
      */
     @PostMapping(value = "/patient/add")
     @ResponseStatus(HttpStatus.CREATED)
@@ -58,7 +58,7 @@ public class PatientController {
 
     /**
      * Pour ajouter un patient
-     * @param patient
+     * @param patient le patient à ajouter
      * @return le patient ajouté
      */
     @PostMapping(value = "/patient/add2")
@@ -69,8 +69,13 @@ public class PatientController {
 
     }
 
+    /**
+     * Pour mettre à jour un patient
+     * @param patient le patient à mettre à jour
+     * @return le patient mis à jour
+     */
     @PutMapping(value = "/patient/update")
-    public Patient updatePatient(@RequestBody Patient patient) throws AlreadyExistException {
+    public Patient updatePatient(@RequestBody Patient patient) {
         try {
             return patientService.updatePatient(patient);
         } catch (AlreadyExistException e) {
@@ -80,6 +85,10 @@ public class PatientController {
 
     }
 
+    /**
+     * Pour supprimer un patient
+     * @param id l'id du patient à supprimer
+     */
     @DeleteMapping(value = "/patient/deletePatient/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePatient(@PathVariable Integer id) {
