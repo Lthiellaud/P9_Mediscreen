@@ -39,10 +39,10 @@ public class PatientController {
             model.addAttribute("patient", patientManagementProxy.getPatientById(id));
             return "patient/update";
         } catch (NotFoundException e) {
-            LOGGER.error("Error during loading patient " + e.toString());
+            LOGGER.error("Problème lors de la récupération des données " + e.toString());
             attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("Error during loading patient " + e.toString());
+            LOGGER.error("Problème lors de la récupération des données " + e.toString());
             attributes.addFlashAttribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard");
         }
         return "redirect:/patient/list";
@@ -60,13 +60,50 @@ public class PatientController {
         try {
             patientManagementProxy.updatePatient(patient);
             LOGGER.info("Patient id " + id + " updated");
-            attributes.addFlashAttribute("message", "Update successful");
+            attributes.addFlashAttribute("message", "Patient mis à jour");
         } catch (NotFoundException | AlreadyExistException e) {
-            LOGGER.error("Error during updating patient " + e.toString());
+            LOGGER.error("Problème pendant la mise à jour patient " + e.toString());
             attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("Error during updating patient " + e.toString());
-            attributes.addFlashAttribute("message", "Issue during updating, please retry later");
+            LOGGER.error("Problème pendant la mise à jour " + e.toString());
+            attributes.addFlashAttribute("message", "Problème pendant la mise à jour, réessayer plus tard");
+        }
+
+        return "redirect:/patient/list";
+
+    }
+
+    @GetMapping("/patient/add")
+    public String showAddPatientForm(Model model, RedirectAttributes attributes) {
+        model.addAttribute(new Patient());
+        return "patient/add";
+
+    }
+
+    @PostMapping("/patient/validate")
+    public String addPatient(@ModelAttribute("patient") @Valid Patient patient,
+                                BindingResult result, Model model, RedirectAttributes attributes) {
+        if (result.hasErrors()) {
+            LOGGER.debug("Mauvaise saisie");
+            return "patient/add";
+        }
+        try {
+            Patient addedPatient = patientManagementProxy.addPatient(
+                    patient.getLastName(),
+                    patient.getFirstName(),
+                    patient.getBirthDate(),
+                    patient.getSex(),
+                    patient.getHomeAddress(),
+                    patient.getPhoneNumber());
+            LOGGER.info("Patient id " + addedPatient.getPatientId() + " créé ");
+            model.addAttribute("message", "Patient id " + addedPatient.getPatientId() + " créé");
+            return "patient/add";
+        } catch (AlreadyExistException e) {
+            LOGGER.error("Problème lors de la création du patient " + e.toString());
+            attributes.addFlashAttribute("message", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Problème lors de la création du patient " + e.toString());
+            attributes.addFlashAttribute("message", "Problème lors de la création du patient, réessayer plus tard");
         }
 
         return "redirect:/patient/list";

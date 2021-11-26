@@ -1,25 +1,35 @@
 package com.mediscreen.webapp.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
+
+import java.io.IOException;
 
 public class CustomErrorDecoder implements ErrorDecoder {
 
     private final ErrorDecoder defaultErrorDecoder = new Default();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public Exception decode(String invoqueur, Response reponse) {
+    public Exception decode(String invoker, Response response) {
+        ExceptionResponseBody responseBody = null ;
+        String body = response.body().toString();
 
-        String [] message = invoqueur.split("#");
-        message[1] = message[1].replace("get", "") + " not obtained";
-        if ( reponse.status() == 404) {
-            return new NotFoundException(message[0] + " " + message[1]);
-        }
-        if ( reponse.status() == 409) {
-            return new AlreadyExistException(message[0] + " " + message[1]);
+        try {
+            responseBody = objectMapper.readValue(body, ExceptionResponseBody.class);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return defaultErrorDecoder.decode(invoqueur, reponse);
+        if ( response.status() == 404 && null != responseBody ) {
+            return new NotFoundException(responseBody.getMessage());
+        }
+        if ( response.status() == 409  && null != responseBody ) {
+            return new AlreadyExistException(responseBody.getMessage());
+        }
+
+        return defaultErrorDecoder.decode(invoker, response);
     }
 
 }
