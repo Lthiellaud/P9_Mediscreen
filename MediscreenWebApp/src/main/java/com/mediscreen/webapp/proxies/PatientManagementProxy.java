@@ -21,10 +21,10 @@ public interface PatientManagementProxy {
     @PostMapping(value="/patient/add")
     Patient addPatient(@RequestParam("family") String lastName,
                        @RequestParam("given") String firstName,
-                       @RequestParam ("dob") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
+                       @RequestParam("dob") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
                        @RequestParam String sex,
-                       @RequestParam String address,
-                       @RequestParam String phone);
+                       @RequestParam(required = false) String address,
+                       @RequestParam(required = false) String phone);
 
     @GetMapping(value = "/patient/patientById/{id}")
     Patient getPatientById(@PathVariable("id") Integer id);

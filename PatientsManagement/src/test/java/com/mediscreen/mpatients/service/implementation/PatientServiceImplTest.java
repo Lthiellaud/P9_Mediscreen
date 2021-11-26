@@ -30,6 +30,9 @@ class PatientServiceImplTest {
     private static Patient existingPatient = new Patient(1, "Lucas","Ferguson"
             , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399");
 
+    private static Patient existingPatient2 = new Patient(3, "Lucas2","Ferguson2"
+            , LocalDate.of(1980, 1, 1), "M", null, null);
+
     private static Patient updatePatient = new Patient(2, "Lucas","Ferguson"
             , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", null);
 
@@ -48,6 +51,15 @@ class PatientServiceImplTest {
         when(patientRepository.save(any(Patient.class))).thenReturn(existingPatient);
         Patient newPatient = patientService.createPatient("Ferguson", "Lucas"
                 , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399");
+
+        assertThat(newPatient.getPatientId()).isEqualTo(1);
+    }
+
+    @Test
+    void createPatient2() {
+        when(patientRepository.save(any(Patient.class))).thenReturn(existingPatient);
+        Patient newPatient = patientService.createPatient("Ferguson", "Lucas"
+                , LocalDate.of(1980, 1, 1), "M", null, null);
 
         assertThat(newPatient.getPatientId()).isEqualTo(1);
     }
@@ -73,6 +85,19 @@ class PatientServiceImplTest {
         Patient patient = patientService.updatePatient(existingPatient);
 
         assertThat(patient.getPatientId()).isEqualTo(existingPatient.getPatientId());
+    }
+
+    @Test
+    void updatePatient2() {
+        when(patientRepository.findById(3)).thenReturn(Optional.of(existingPatient2));
+        when(patientRepository.findPatientByFirstNameAndLastNameAndBirthDateAndSex("Lucas2", "Ferguson2"
+                , LocalDate.of(1980, 1, 1), "M")).thenReturn(Optional.of(existingPatient2));
+
+        when(patientRepository.save(any(Patient.class))).thenReturn(existingPatient2);
+
+        Patient patient = patientService.updatePatient(existingPatient2);
+
+        assertThat(patient.getPatientId()).isEqualTo(existingPatient2.getPatientId());
     }
 
     @Test

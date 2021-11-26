@@ -66,13 +66,8 @@ public class PatientServiceImpl implements PatientService {
         if (savedPatient.isPresent()) {
             throw new AlreadyExistException("Un patient existe déjà avec ces mêmes données clé (patientId " + savedPatient.get().getPatientId()+ ")");
         }
-        Patient patient = new Patient();
-        patient.setFirstName(firstName.trim());
-        patient.setLastName(lastName.trim());
-        patient.setBirthDate(birthDate);
-        patient.setSex(sex.trim());
-        patient.setHomeAddress(address.trim());
-        patient.setPhoneNumber(phone.trim());
+        Patient patient = new Patient(firstName.trim(), lastName.trim(), birthDate, sex.trim()
+                , address  == null ? null : address.trim(), phone  == null ? null : phone.trim());
         return patientRepository.save(patient);
 
     }
@@ -84,21 +79,31 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     public Patient updatePatient(Patient patient) {
-        //Vérifie si le patient existe bien (lance une exception sinon)
+        //Vérifie si le patient existe bien (lance une exception AlreadyExistException sinon)
         getPatientById(patient.getPatientId());
 
         //Vérifie si la clé unique est modifiée et les nouvelles données ne sont pas déjà utilisées
         Optional<Patient> savedPatient = patientRepository
-                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName(), patient.getLastName()
-                        , patient.getBirthDate(), patient.getSex());
+                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName().trim(), patient.getLastName().trim()
+                        , patient.getBirthDate(), patient.getSex().trim());
 
         if (savedPatient.isPresent() && !savedPatient.get().getPatientId().equals(patient.getPatientId())) {
             throw new AlreadyExistException("Un patient existe déjà avec ces mêmes données clé (patientId " + savedPatient.get().getPatientId()+ ")");
         }
 
-        return patientRepository.save(patient);
+        return patientRepository.save(cleanPatient(patient));
     }
 
+    /**
+     * Applique un trim() sur les données "String" du patient
+     * @param patient le patient à traiter
+     * @return le patient sans blanc inutile
+     */
+    private Patient cleanPatient(Patient patient) {
+        return new Patient (patient.getPatientId(), patient.getFirstName().trim(), patient.getLastName().trim(), patient.getBirthDate()
+                , patient.getSex().trim(), patient.getHomeAddress() == null ? null : patient.getHomeAddress().trim()
+                , patient.getPhoneNumber() == null ? null : patient.getPhoneNumber().trim());
+    }
     /**
      * Pour supprimer un patient identifié par son id/ lance une exception si le patient n'a pas été trouvé
      * @param id id
