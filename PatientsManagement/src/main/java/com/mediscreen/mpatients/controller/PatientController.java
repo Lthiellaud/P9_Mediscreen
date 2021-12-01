@@ -1,6 +1,5 @@
 package com.mediscreen.mpatients.controller;
 
-import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.service.PatientService;
 import io.swagger.annotations.*;
@@ -22,7 +21,7 @@ public class PatientController {
 
     @ApiOperation(value = "Liste des Patients suivis")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Suceess|OK")})
+            @ApiResponse(code = 200, message = "Success|OK")})
     @GetMapping(value = "/patient/list")
     public List<Patient> getAllPatient (){
         return patientService.getAllPatient();

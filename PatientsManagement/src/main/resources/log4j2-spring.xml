@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>
+        <Property name="LOG_PATH">logs</Property>
+    </Properties><Appenders>
+    <RollingFile name="appLog"
+                 fileName="${LOG_PATH}/maptients.log"
+                 filePattern="${LOG_PATH}/maptients-%d{yyyy-MM-dd}-%i.log">
+        <PatternLayout pattern="${LOG_PATTERN}" />
+        <Policies>
+            <SizeBasedTriggeringPolicy size="19500KB" />
+        </Policies>
+        <DefaultRolloverStrategy max="1" />
+    </RollingFile>
+    <Console name="Console" target="SYSTEM_OUT">
+        <PatternLayout pattern="${LOG_PATTERN}" />
+    </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="error">
+            <AppenderRef ref="Console"/>
+        </Root>
+        <Logger name="com.mediscreen.mpatients" level="error">
+            <AppenderRef ref="appLog" />
+        </Logger>
+        <Logger name="org.springframework.boot.web.embedded.tomcat" level="info">
+            <AppenderRef ref="appLog" />
+        </Logger>
+    </Loggers>
+</Configuration>
