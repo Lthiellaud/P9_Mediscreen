@@ -13,6 +13,8 @@ services:
       - patients-ms
     ports:
       - 8090:8090
+    volumes:
+      - /logm:/mediscreen/logs
     networks:
       - mediscreen-net
 
@@ -32,6 +34,8 @@ services:
         -DMYSQLDB_URL=$MYSQLDB_URL
     ports:
       - 8081:8081
+    volumes:
+      - /logp:/mpatients/logs
     networks:
       - mediscreen-net
 

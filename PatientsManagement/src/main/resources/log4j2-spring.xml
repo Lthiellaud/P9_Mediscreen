@@ -4,9 +4,7 @@
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>
         <Property name="LOG_PATH">logs</Property>
     </Properties><Appenders>
-    <RollingFile name="appLog"
-                 fileName="${LOG_PATH}/maptients.log"
-                 filePattern="${LOG_PATH}/maptients-%d{yyyy-MM-dd}-%i.log">
+    <RollingFile name="appLog" fileName="${LOG_PATH}/maptients.log" filePattern="${LOG_PATH}/maptients-%d{yyyy-MM-dd}-%i.log">
         <PatternLayout pattern="${LOG_PATTERN}" />
         <Policies>
             <SizeBasedTriggeringPolicy size="19500KB" />

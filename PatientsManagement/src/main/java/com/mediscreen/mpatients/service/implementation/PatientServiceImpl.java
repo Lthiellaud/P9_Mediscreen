@@ -5,6 +5,8 @@ import com.mediscreen.mpatients.exception.NotFoundException;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.repository.PatientRepository;
 import com.mediscreen.mpatients.service.PatientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import java.util.Optional;
  */
 @Service
 public class PatientServiceImpl implements PatientService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientService.class);
 
     @Autowired
     private PatientRepository patientRepository;
@@ -33,8 +37,12 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     public Patient getPatientById(Integer id) {
+        LOGGER.info("Recherche patient id " + id);
         return patientRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("patientId " + id + " non trouvé"));
+                .orElseThrow(() -> {
+                    LOGGER.error("Patient non trouvé");
+                    return new NotFoundException("patientId " + id + " non trouvé");
+                });
     }
 
     /**
@@ -44,6 +52,7 @@ public class PatientServiceImpl implements PatientService {
      */
     @Override
     public List<Patient> getPatientByLastName(String lastName) {
+        LOGGER.info("Recherche patient " + lastName);
         return patientRepository.findByLastName(lastName);
     }
 
@@ -64,6 +73,7 @@ public class PatientServiceImpl implements PatientService {
                 .findPatientByFirstNameAndLastNameAndBirthDateAndSex(firstName.trim(), lastName.trim()
                         , birthDate, sex.trim());
         if (savedPatient.isPresent()) {
+            LOGGER.error("Patient à créer déjà en base - id : " + savedPatient.get().getPatientId());
             throw new AlreadyExistException("Un patient existe déjà avec ces mêmes données clé (patientId " + savedPatient.get().getPatientId()+ ")");
         }
         Patient patient = new Patient(firstName.trim(), lastName.trim(), birthDate, sex.trim()
@@ -88,6 +98,7 @@ public class PatientServiceImpl implements PatientService {
                         , patient.getBirthDate(), patient.getSex().trim());
 
         if (savedPatient.isPresent() && !savedPatient.get().getPatientId().equals(patient.getPatientId())) {
+            LOGGER.error("Patient à mettre à jour (id: "+ patient.getPatientId() + ") existe déjà en base sou sun autre id - id : " + savedPatient.get().getPatientId());
             throw new AlreadyExistException("Un patient existe déjà avec ces mêmes données clé (patientId " + savedPatient.get().getPatientId()+ ")");
         }
 
