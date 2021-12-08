@@ -1,9 +1,10 @@
 package com.mediscreen.mpatients.controller;
 
-import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.model.Patient;
 import com.mediscreen.mpatients.service.PatientService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,11 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientController.class);
+
     @ApiOperation(value = "Liste des Patients suivis")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Suceess|OK")})
+            @ApiResponse(code = 200, message = "Success|OK")})
     @GetMapping(value = "/patient/list")
     public List<Patient> getAllPatient (){
         return patientService.getAllPatient();
@@ -64,8 +67,9 @@ public class PatientController {
                               @ApiParam(value = "Genre (F ou M)") @RequestParam String sex,
                               @ApiParam(value = "Adresse") @RequestParam(required = false) String address,
                               @ApiParam(value = "Téléphone") @RequestParam(required = false) String phone) {
-
-        return patientService.createPatient(lastName, firstName, birthDate, sex, address, phone);
+        Patient patient = patientService.createPatient(lastName, firstName, birthDate, sex, address, phone);
+        LOGGER.info("Patient créé - id " + patient.getPatientId());
+        return patient;
 
     }
 
@@ -81,7 +85,9 @@ public class PatientController {
             @ApiResponse(code = 409, message = "Un patient existe déjà avec ces mêmes données clé (patientId {id})") })
     @PutMapping(value = "/patient/update")
     public Patient updatePatient(@RequestBody Patient patient) {
-        return patientService.updatePatient(patient);
+        Patient updatePatient = patientService.updatePatient(patient);
+        LOGGER.info("Patient id " + updatePatient.getPatientId() + " mis à jour");
+        return updatePatient;
 
     }
 
