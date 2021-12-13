@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 public class PatientServiceImpl implements PatientService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PatientService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientServiceImpl.class);
 
     @Autowired
     private PatientRepository patientRepository;
