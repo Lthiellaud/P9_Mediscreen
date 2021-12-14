@@ -24,7 +24,7 @@ public class NoteController {
     @ApiOperation(value = "Liste des notes prises pour un patient")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK")})
-    @GetMapping(value = "/note/notesByPatientId/{id}")
+    @GetMapping(value = "/patHistory/notesByPatientId/{id}")
     public List<Note> getAllNotesByPatientId(@PathVariable Integer id) {
         return noteService.getAllNotesByPatientId(id);
     }
@@ -32,7 +32,7 @@ public class NoteController {
     @ApiOperation(value = "Liste de l'ensemble des notes de la base")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK")})
-    @GetMapping(value = "/note/all")
+    @GetMapping(value = "/patHistory/all")
     public List<Note> getAllNotes() {
         return noteService.getAllNotes();
     }

@@ -8,11 +8,7 @@
 </head>
 <body>
 <div class="container">
-	<div class="row"><h2>th:text="${'Liste des notes du patient ' + notesListDTO.firstName + ' ' + notesListDTO.lastName}"</h2></div>
-	<div class="row"><h2>th:text="${'id du patient : ' + notesListDTO.patientId}"</h2></div>
-	<div class="row">
-		<a href="/note/add/{patientId}(patientId=${notesListDTO.patientId})" class="btn btn-primary btn-sm">Nouvelle Note</a>
-	</div>
+	<div class="row"><h2>Liste des notes de l'ensemble des patients</h2></div>
 	<div class="row">
 		<p th:if="${message != null}" th:text="${message}" style="color: red;">Result message</p>
 		<p th:unless="${message != null}">&nbsp;</p>
@@ -21,22 +17,22 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th>Id</th>
+					<th>Id Patient</th>
+					<th>Date</th>
 					<th>Note</th>
-					<th>Date de la note</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:if="${#lists.isEmpty(notesListDTO)}">
+				<tr th:if="${#lists.isEmpty(notes)}">
 					<td colspan="6">Aucune note enregistrée</td>
 				</tr>
-				<tr th:each="note :${notesListDTO.notes}">
-					<td><span th:text="${note.id}"> Id </span></td>
-					<td><span th:text="${note.noteDate}"> Date de la note </span></td>
+				<tr th:each="note :${notes}">
+					<td><span th:text="${note.patientId}"> Id Patient </span></td>
+					<td><span th:text="${note.noteDate}"> Date </span></td>
 					<td><span th:text="${note.note}"> Note </span></td>
 					<td>
-						<a th:href="@{/note/update/{patientId}/{id}(patientId=${notesListDTO.patientId}, id=${note.id}})}">Edit</a>
+
 					</td>
 				</tr>
 			</tbody>

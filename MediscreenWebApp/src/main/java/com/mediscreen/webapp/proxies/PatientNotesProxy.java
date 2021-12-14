@@ -13,9 +13,9 @@ import java.util.List;
 @FeignClient(name = "PatientsNotes", url = "${feign.url.note}")
 public interface PatientNotesProxy {
 
-    @GetMapping(value = "/note/notesByPatientId/{id}")
+    @GetMapping(value = "/patHistory/notesByPatientId/{id}")
     List<Note> getAllNotesByPatientId(@PathVariable Integer id);
 
-    @GetMapping(value = "/note/all")
+    @GetMapping(value = "/patHistory/all")
     List<Note> getAllNotes();
 }

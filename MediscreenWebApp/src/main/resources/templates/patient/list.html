@@ -44,7 +44,7 @@
 					<td><span th:text="${patient.phoneNumber}"> Téléphone </span></td>
 					<td>
 						<a th:href="@{/patient/update/{id}(id=${patient.patientId})}">Edit</a>&nbsp;|&nbsp;
-						<a th:href="@{/note/notesByPatientId/{id}(id=${patient.patientId})}">Accéder aux notes</a>
+						<a th:href="@{/patHistory/allByPatient/{patientId}(patientId=${patient.patientId})}">Accéder aux notes</a>
 					</td>
 				</tr>
 			</tbody>
