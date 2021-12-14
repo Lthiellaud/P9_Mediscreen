@@ -120,6 +120,27 @@ class PatientControllerTest {
     }
 
     @Test
+    void updatePatientOtherException() throws Exception {
+
+        when(patientManagementProxy.updatePatient(any(Patient.class))).thenThrow(new RuntimeException("Autre problème"));
+        mockMvc.perform(post("/patient/update/{id}", "1")
+                .param("patientId","1")
+                .param("firstName","Lucas")
+                .param("lastName","Ferguson")
+                .param("birthDate","1980-12-01")
+                .param("sex","M")
+                .param("homeAddress","2 Warren Street ")
+                .param("phoneNumber","387-866-1399"))
+                .andExpect(status().is(302))
+                .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("message", "Problème pendant la mise à jour, réessayer plus tard"))
+                .andExpect(redirectedUrl("/patient/list"))
+                .andDo(print());
+
+        verify(patientManagementProxy, times(1)).updatePatient(any(Patient.class));
+    }
+
+    @Test
     void showUpdatePatientForm() throws Exception {
 
         when(patientManagementProxy.getPatientById(1)).thenReturn(existingPatient);

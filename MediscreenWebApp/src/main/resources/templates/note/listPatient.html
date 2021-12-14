@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<title>Notes</title>
+	<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+<div class="container">
+	<div class="row"><h3 th:text="${'Liste des notes enregistrées pour le patient id ' + patient.patientId}"></h3></div>
+	<div class="row"><p th:text="${'Nom : ' + patient.firstName + ' ' + patient.lastName}" style="color: #0056b3;"></p></div>
+	<div class="row"><p th:text="${'Sexe : ' + patient.sex + ' / Date de naissance : ' + patient.birthDate}" style="color: #0056b3;"></p></div>
+	<div class="row">
+		<p th:if="${message != null}" th:utext="${message}" style="color: red;">Result message</p>
+		<p th:unless="${message != null}">&nbsp;</p>
+	</div>
+	<div class="row">
+		<table class="table table-bordered">
+			<thead>
+			<tr>
+				<th>Date</th>
+				<th>Note</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:if="${#lists.isEmpty(notes)}">
+				<td colspan="6">Aucune note enregistrée</td>
+			</tr>
+			<tr th:each="note :${notes}">
+				<td><span th:text="${note.noteDate}"> Date </span></td>
+				<td><span th:text="${note.note}"> Note </span></td>
+				<td>
+
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>

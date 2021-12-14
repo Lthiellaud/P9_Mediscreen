@@ -4,7 +4,7 @@
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>
         <Property name="LOG_PATH">logs</Property>
     </Properties><Appenders>
-    <RollingFile name="appLog" fileName="${LOG_PATH}/mpatients.log" filePattern="${LOG_PATH}/mpatients-%d{yyyy-MM-dd}-%i.log">
+    <RollingFile name="appLog" fileName="${LOG_PATH}/mnotes.log" filePattern="${LOG_PATH}/mnotes-%d{yyyy-MM-dd}-%i.log">
         <PatternLayout pattern="${LOG_PATTERN}" />
         <Policies>
             <SizeBasedTriggeringPolicy size="19500KB" />
@@ -19,10 +19,13 @@
         <Root level="error">
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="com.mediscreen.mpatients" level="error">
+        <Logger name="com.mediscreen.mnotes" level="error">
             <AppenderRef ref="appLog" />
         </Logger>
         <Logger name="org.springframework.boot.web.embedded.tomcat" level="info">
+            <AppenderRef ref="appLog" />
+        </Logger>
+        <Logger name="org.springframework.data.mongodb.core.MongoTemplate" level="debug">
             <AppenderRef ref="appLog" />
         </Logger>
     </Loggers>

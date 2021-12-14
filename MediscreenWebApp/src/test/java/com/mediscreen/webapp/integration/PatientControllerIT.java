@@ -53,23 +53,24 @@ class PatientControllerIT {
 
     @Test
     void updatePatientAlreadyExist() throws Exception {
-
-        Patient p = patientManagementProxy.getAllPatient().get(0);
-        String i = String.valueOf(p.getPatientId() + 1);
-        mockMvc.perform(post("/patient/update/{id}", i)
-                .param("firstName",p.getFirstName())
-                .param("lastName",p.getLastName())
-                .param("birthDate",p.getBirthDate().toString())
-                .param("sex",p.getSex())
-                .param("homeAddress","2 Warren Street ")
-                .param("phoneNumber","387-866-1399"))
-                .andExpect(status().is(302))
-                .andExpect(model().hasNoErrors())
-                .andExpect(flash().attribute("message", "Un patient existe déjà avec ces mêmes données clé (patientId "+
-                        p.getPatientId() + ")"))
-                .andExpect(redirectedUrl("/patient/list"))
-                .andDo(print());
-
+        if (patientManagementProxy.getAllPatient().size()>1) {
+            Patient p = patientManagementProxy.getAllPatient().get(0);
+            Patient p2 = patientManagementProxy.getAllPatient().get(1);
+            String i = String.valueOf(p2.getPatientId());
+            mockMvc.perform(post("/patient/update/{id}", i)
+                    .param("firstName", p.getFirstName())
+                    .param("lastName", p.getLastName())
+                    .param("birthDate", p.getBirthDate().toString())
+                    .param("sex", p.getSex())
+                    .param("homeAddress", "2 Warren Street ")
+                    .param("phoneNumber", "387-866-1399"))
+                    .andExpect(status().is(302))
+                    .andExpect(model().hasNoErrors())
+                    .andExpect(flash().attribute("message", "Un patient existe déjà avec ces mêmes données clé (patientId " +
+                            p.getPatientId() + ")"))
+                    .andExpect(redirectedUrl("/patient/list"))
+                    .andDo(print());
+        }
     }
 
 }
