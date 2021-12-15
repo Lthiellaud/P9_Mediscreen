@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      lang="fr">
 <head>
     <meta charset="utf-8"/>
     <title>Notes</title>
@@ -43,7 +44,7 @@
             </tr>
             <tr th:each="note :${notes}">
                 <td><span th:text="${note.noteDate}"> Date </span></td>
-                <td><span th:text="${note.note}"> Note </span></td>
+                <td><span th:utext="${note.note}"> Note </span></td>
                 <td>
 
                 </td>
