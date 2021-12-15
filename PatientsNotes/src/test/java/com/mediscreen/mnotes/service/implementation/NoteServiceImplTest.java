@@ -4,7 +4,6 @@ import com.mediscreen.mnotes.exception.NotFoundException;
 import com.mediscreen.mnotes.model.Note;
 import com.mediscreen.mnotes.repository.NoteRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,6 +37,27 @@ class NoteServiceImplTest {
         assertThat(notes.size()).isEqualTo(1);
         assertThat(notes.get(0).getNote()).isEqualTo("Nouvelle note");
         assertThat(notes.get(0).getNoteDate()).isEqualTo(aujourdHui);
+    }
+
+    @Test
+    public void getNoteById() {
+        Note note = new Note("noteId1", 1,LocalDate.of(2021,12,1),"Nouvelle note");
+        when(noteRepository.findById("noteId1")).thenReturn(Optional.of(note));
+
+        Note note1 =  noteService.getNoteById("noteId1");
+
+        assertThat(note1.getNoteDate()).isEqualTo(LocalDate.of(2021,12,1));
+        assertThat(note1.getNote()).isEqualTo("Nouvelle note");
+        assertThat(note1.getPatientId()).isEqualTo(1);
+    }
+
+    @Test
+    public void getNoteByIdNotFound() {
+        when(noteRepository.findById("noteId1")).thenThrow(new NotFoundException("note non trouvée"));
+
+        Exception exception = assertThrows(NotFoundException.class, () -> noteService.getNoteById("noteId1"));
+
+        assertThat(exception.getMessage()).isEqualTo("note non trouvée");
     }
 
     @Test

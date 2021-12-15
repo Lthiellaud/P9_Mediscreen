@@ -59,10 +59,15 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public Note updateNote(Note note) {
         LOGGER.info("Demande de mise à jour d'une note pour patient " + note.getPatientId());
-        noteRepository.findById(note.getId()).orElseThrow(() -> {
-            LOGGER.error("Note non trouvée");
-            return new NotFoundException("noteId " + note.getId() + " non trouvé");
-        });
+        getNoteById(note.getId());
         return noteRepository.save(note);
+    }
+
+    @Override
+    public Note getNoteById(String id) {
+        return noteRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Note non trouvée");
+            return new NotFoundException("noteId " + id + " non trouvé");
+        });
     }
 }
