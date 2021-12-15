@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Ajout Note</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="row"><h3 th:text="${'Ajout d''une nouvelle note pour le patient id ' + patient.patientId}"></h3></div>
+    <div class="row"><p th:text="${'Nom : ' + patient.firstName + ' ' + patient.lastName}" style="color: #0056b3;"></p></div>
+    <div class="row"><p th:text="${'Sexe : ' + patient.sex + ' / Date de naissance : ' + patient.birthDate}" style="color: #0056b3;"></p></div>
+    <div class="row">
+        <p th:if="${message != null}" th:utext="${message}" style="color: red;">Result message</p>
+        <p th:unless="${message != null}">&nbsp;</p>
+    </div>
+
+
+    <div class="row">
+        <form action="#" th:action="@{/patHistory/add/{patientId}(patientId=${patient.patientId})}" th:object="${note}" method="post"
+              class="form-horizontal" style="width: 100%">
+            <div class="form-floating">
+                <label for="noteText" class="col-sm-6 control-label">Note à ajouter </label>
+                <textarea class="form-control" th:field="*{note}" placeholder="Saisir votre note ici" id="noteText" style="height: 150px" required>
+                </textarea>
+                <p class="text-danger" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></p>
+            </div>
+            <div class="row">
+                <p>&nbsp;</p>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a class="btn btn-danger btn-sm" th:href="@{/patHistory/allByPatient/{patientId}(patientId=${patient.patientId})}">Annuler</a>
+                    <input class="btn btn-primary btn-sm" type="submit" value="Ajouter la note">
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

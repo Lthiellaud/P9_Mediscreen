@@ -24,6 +24,7 @@ public class Note {
     private Integer patientId;
     @Field(value = "note_date")
     private LocalDate noteDate;
+    @Field(value = "note")
     private String note;
 
     public Note(Integer patientId,String note) {

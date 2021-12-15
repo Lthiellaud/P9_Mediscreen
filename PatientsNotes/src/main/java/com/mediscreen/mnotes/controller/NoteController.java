@@ -46,7 +46,7 @@ public class NoteController {
             @ApiResponse(code = 400, message = "Bad request")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/patHistory/add")
-    public Note createNote(@RequestParam Integer patientId, @RequestParam String note) {
+    public Note createNote(@RequestParam("patientId") Integer patientId, @RequestParam("note") String note) {
         LOGGER.info("Note à ajouter pour le Patient id " + patientId);
         return noteService.createNote(patientId, note);
     }
