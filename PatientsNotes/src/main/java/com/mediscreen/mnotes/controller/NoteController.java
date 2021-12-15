@@ -24,6 +24,7 @@ public class NoteController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteController.class);
 
+    /*--------------------------------------------------------------------------------*/
     @ApiOperation(value = "Liste des notes prises pour un patient")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK")})
@@ -32,6 +33,7 @@ public class NoteController {
         return noteService.getAllNotesByPatientId(id);
     }
 
+    /*--------------------------------------------------------------------------------*/
     @ApiOperation(value = "Liste de l'ensemble des notes de la base")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK")})
@@ -40,6 +42,7 @@ public class NoteController {
         return noteService.getAllNotes();
     }
 
+    /*--------------------------------------------------------------------------------*/
     @ApiOperation(value = "Création d'une nouvelle note pour le patient {patId}")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
@@ -49,6 +52,19 @@ public class NoteController {
     public Note createNote(@RequestParam("patientId") Integer patientId, @RequestParam("note") String note) {
         LOGGER.info("Note à ajouter pour le Patient id " + patientId);
         return noteService.createNote(patientId, note);
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = "Mise à jour d'une note pour le patient")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 404, message = "noteId {noteId} non trouvé"),
+            @ApiResponse(code = 400, message = "Bad request")})
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "/patHistory/update")
+    public Note updateNote(@RequestBody Note note) {
+        LOGGER.info("Note "+ note.getId() + " à mettre à jour pour le Patient id " + note.getPatientId());
+        return noteService.updateNote(note);
     }
 
 }
