@@ -37,7 +37,7 @@ public class NoteController {
             @ApiResponse(code = 404, message = "noteId {noteId} non trouvé"),
             @ApiResponse(code = 400, message = "Bad request")})
     @GetMapping(value = "/patHistory/noteById/{id}")
-    public Note getNoteByPatientId(@ApiParam(value = "Id de la note") @PathVariable String id) {
+    public Note getNoteById(@ApiParam(value = "Id de la note") @PathVariable String id) {
         return noteService.getNoteById(id);
     }
 

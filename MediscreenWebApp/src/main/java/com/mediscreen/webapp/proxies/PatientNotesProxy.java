@@ -26,5 +26,5 @@ public interface PatientNotesProxy {
     Note updateNote(@RequestBody Note note);
 
     @GetMapping(value = "/patHistory/noteById/{id}")
-    Note getNoteByPatientId(@PathVariable String id);
+    Note getNoteById(@PathVariable String id);
 }

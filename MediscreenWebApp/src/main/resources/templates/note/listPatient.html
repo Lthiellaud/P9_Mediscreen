@@ -46,7 +46,7 @@
                 <td><span th:text="${note.noteDate}"> Date </span></td>
                 <td><span th:utext="${note.note}"> Note </span></td>
                 <td>
-
+                    <a th:href="@{/patHistory/update/{patientId}/{noteId}(patientId=${patient.patientId}, noteId=${note.id})}">Edit</a>
                 </td>
             </tr>
             </tbody>

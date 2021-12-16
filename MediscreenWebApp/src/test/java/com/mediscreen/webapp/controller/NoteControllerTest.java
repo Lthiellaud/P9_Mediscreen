@@ -9,14 +9,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -79,6 +84,33 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(model().hasNoErrors())
                 .andExpect(flash().attribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard"));
+    }
+
+    @Test
+    void updateNotePatient() throws Exception {
+        //when(patientNotesProxy.updateNote(any(Note.class)))
+        //        .thenReturn(new Note());
+        //when(patientManagementProxy.getPatientById(1)).thenThrow(new RuntimeException("Autre problème"));
+
+        mockMvc.perform(post("/patHistory/update/1/noteId1")
+                //.param("patientId","1")
+                //.param("noteId","1")
+                .param("id", "noteId1")
+                .param("patientId", "1")
+                .param("noteDate", "2021-12-01")
+                .param("note", "text")
+                //.param("patient.patientId","1")
+                .param("firstName","Lucas")
+                .param("lastName","Ferguson")
+                .param("birthDate","1980-01-01")
+                .param("sex","M")
+                .param("homeAddress","2 Warren Street ")
+                .param("phoneNumber","387-866-1399"))
+                //.andExpect(status().isOk())
+                //.andExpect(view().name("note/update"))
+                .andDo(print());
+                //.andExpect(model().hasNoErrors())
+                //.andExpect(flash().attribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard"));
     }
 
 

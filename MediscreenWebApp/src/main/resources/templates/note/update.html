@@ -17,9 +17,10 @@
 <body>
 <div class="container">
 
-    <div class="row"><h3 th:text="${'Ajout d''une nouvelle note pour le patient id ' + patient.patientId}"></h3></div>
+    <div class="row"><h3 th:text="${'Mise à jour de la note du ' + note.noteDate + ' pour le patient id ' + patient.patientId}"></h3></div>
     <div class="row"><p th:text="${'Nom : ' + patient.firstName + ' ' + patient.lastName}" style="color: #0056b3;"></p></div>
     <div class="row"><p th:text="${'Sexe : ' + patient.sex + ' / Date de naissance : ' + patient.birthDate}" style="color: #0056b3;"></p></div>
+
     <div class="row">
         <p th:if="${message != null}" th:utext="${message}" style="color: red;">Result message</p>
         <p th:unless="${message != null}">&nbsp;</p>
@@ -27,12 +28,18 @@
 
 
     <div class="row">
-        <form action="#" th:action="@{/patHistory/add/{patientId}(patientId=${patient.patientId})}" th:object="${note}" method="post"
+        <form action="#" th:action="@{/patHistory/update/{patientId}/{noteId}(patientId=${patient.patientId},noteId=${note.id})}" th:object="${note}" method="post"
               class="form-horizontal" style="width: 100%">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <input type="hidden" th:field="*{noteDate}" id="noteDate" placeholder="Date de la note"
+                           class="col-4" readonly>
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-sm-12">Note à mettre à jour</div>
                 <div class="col-sm-12">
-                    <textarea id="note" name="note" th:field="*{note}"></textarea>
+                    <textarea id="note" th:field="*{note}"></textarea>
                 </div>
                 <p class="text-danger" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></p>
             </div>
@@ -42,7 +49,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <a class="btn btn-danger btn-sm" th:href="@{/patHistory/allByPatient/{patientId}(patientId=${patient.patientId})}">Annuler</a>
-                    <input class="btn btn-primary btn-sm" type="submit" value="Ajouter la note">
+                    <input class="btn btn-primary btn-sm" type="submit" value="Mettre à jour">
                 </div>
             </div>
         </form>

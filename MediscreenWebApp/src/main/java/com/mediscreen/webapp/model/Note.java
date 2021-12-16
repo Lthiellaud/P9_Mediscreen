@@ -1,11 +1,11 @@
 package com.mediscreen.webapp.model;
 
+import com.mediscreen.webapp.model.validation.ValidNote;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Getter
@@ -18,7 +18,7 @@ public class Note {
 
     private Integer patientId;
     private LocalDate noteDate;
-    @NotBlank(message = "Merci de saisir votre note ou annuler")
+    @ValidNote
     private String note;
 
     public Note(Integer patientId, String note) {
