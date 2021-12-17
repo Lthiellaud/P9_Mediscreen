@@ -30,10 +30,10 @@ public class Note {
     private LocalDate noteDate;
     @ApiModelProperty(value = "Note du médecin", required = true, example = "Note prise par le médecin", position = 3)
     @Field(value = "note")
-    private String note;
+    private String noteText;
 
-    public Note(Integer patientId,String note) {
-        this.note = note;
+    public Note(Integer patientId,String noteText) {
+        this.noteText = noteText;
         this.patientId = patientId;
         this.noteDate = LocalDate.now();
     }

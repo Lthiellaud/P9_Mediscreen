@@ -1,11 +1,10 @@
-package com.mediscreen.webapp.validation;
+package com.mediscreen.webapp.utils;
 
-import com.mediscreen.webapp.utils.StringUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NoteValidator {
+public class StringUtilTest {
 
     @Test
     public void nettoyerTags(){

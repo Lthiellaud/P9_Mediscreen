@@ -1,10 +1,9 @@
-package com.mediscreen.webapp.model.validation;
+package com.mediscreen.webapp.validation;
 
 import com.mediscreen.webapp.utils.StringUtil;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.regex.Pattern;
 
 public class NoteValidator implements ConstraintValidator<ValidNote, String> {
 

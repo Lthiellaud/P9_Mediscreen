@@ -1,4 +1,4 @@
-package com.mediscreen.webapp.model.validation;
+package com.mediscreen.webapp.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

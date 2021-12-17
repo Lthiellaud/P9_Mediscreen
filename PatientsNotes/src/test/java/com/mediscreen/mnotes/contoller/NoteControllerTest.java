@@ -75,7 +75,7 @@ class NoteControllerTest {
                     .param("note","Nouvelle note Patient 1"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("noteDate", is(aujourdHui.toString())))
-                .andExpect(jsonPath("note", is("Nouvelle note Patient 1")))
+                .andExpect(jsonPath("noteText", is("Nouvelle note Patient 1")))
                 .andDo(print());
     }
 
@@ -95,7 +95,7 @@ class NoteControllerTest {
         mockMvc.perform(createRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("noteDate", is("2021-12-01")))
-                .andExpect(jsonPath("note", is("texte de la note")))
+                .andExpect(jsonPath("noteText", is("texte de la note")))
                 .andDo(print());
     }
 

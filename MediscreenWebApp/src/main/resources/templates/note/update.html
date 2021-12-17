@@ -17,9 +17,9 @@
 <body>
 <div class="container">
 
-    <div class="row"><h3 th:text="${'Mise à jour de la note du ' + note.noteDate + ' pour le patient id ' + patient.patientId}"></h3></div>
-    <div class="row"><p th:text="${'Nom : ' + patient.firstName + ' ' + patient.lastName}" style="color: #0056b3;"></p></div>
-    <div class="row"><p th:text="${'Sexe : ' + patient.sex + ' / Date de naissance : ' + patient.birthDate}" style="color: #0056b3;"></p></div>
+    <div class="row"><h3 th:text="${'Mise à jour de la note du ' + noteDTO.noteDate + ' pour le patient id ' + noteDTO.patientId}"></h3></div>
+    <div class="row"><p th:text="${'Nom : ' + noteDTO.firstName + ' ' + noteDTO.lastName}" style="color: #0056b3;"></p></div>
+    <div class="row"><p th:text="${'Sexe : ' + noteDTO.sex + ' / Date de naissance : ' + noteDTO.birthDate}" style="color: #0056b3;"></p></div>
 
     <div class="row">
         <p th:if="${message != null}" th:utext="${message}" style="color: red;">Result message</p>
@@ -28,28 +28,32 @@
 
 
     <div class="row">
-        <form action="#" th:action="@{/patHistory/update/{patientId}/{noteId}(patientId=${patient.patientId},noteId=${note.id})}" th:object="${note}" method="post"
+        <form action="#" th:action="@{/patHistory/update/{patientId}/{noteId}(patientId=${noteDTO.patientId},noteId=${noteDTO.id})}" th:object="${noteDTO}" method="post"
               class="form-horizontal" style="width: 100%">
-            <div class="form-group">
-                <div class="col-sm-6">
-                    <input type="hidden" th:field="*{noteDate}" id="noteDate" placeholder="Date de la note"
-                           class="col-4" readonly>
-                </div>
-            </div>
             <div class="form-group">
                 <div class="col-sm-12">Note à mettre à jour</div>
                 <div class="col-sm-12">
-                    <textarea id="note" th:field="*{note}"></textarea>
+                    <textarea id="noteText" name="noteText" th:field="*{noteText}"></textarea>
                 </div>
-                <p class="text-danger" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></p>
+                <p class="text-danger" th:if="${#fields.hasErrors('noteText')}" th:errors="*{noteText}"></p>
             </div>
             <div class="row">
                 <p>&nbsp;</p>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <a class="btn btn-danger btn-sm" th:href="@{/patHistory/allByPatient/{patientId}(patientId=${patient.patientId})}">Annuler</a>
+                    <a class="btn btn-danger btn-sm" th:href="@{/patHistory/allByPatient/{patientId}(patientId=${noteDTO.patientId})}">Annuler</a>
                     <input class="btn btn-primary btn-sm" type="submit" value="Mettre à jour">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <input type="hidden" th:field="*{noteDate}" id="noteDate" placeholder="Date de la note" readonly>
+                    <input type="hidden" th:field="*{patientId}" id="patientId" placeholder="Id patient" readonly>
+                    <input type="hidden" th:field="*{firstName}" id="firstName" placeholder="Prénom" readonly>
+                    <input type="hidden" th:field="*{lastName}" id="lastName" placeholder="Nom" readonly>
+                    <input type="hidden" th:field="*{birthDate}" id="birthDate" placeholder="Date de naissance" readonly>
+                    <input type="hidden" th:field="*{sex}" id="sex" placeholder="Genre" readonly>
                 </div>
             </div>
         </form>
@@ -57,8 +61,8 @@
 
 </div>
 <script>
-    $('#note').summernote({
-        height: 150,
+    $('#noteText').summernote({
+        height: 100,
         toolbar: [
             [ 'style', [ 'style' ] ],
             [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
