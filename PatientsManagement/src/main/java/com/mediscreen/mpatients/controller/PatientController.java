@@ -84,7 +84,7 @@ public class PatientController {
             @ApiResponse(code = 404, message = "patientId {id} non trouvé"),
             @ApiResponse(code = 409, message = "Un patient existe déjà avec ces mêmes données clé (patientId {id})") })
     @PutMapping(value = "/patient/update")
-    public Patient updatePatient(@RequestBody Patient patient) {
+    public Patient updatePatient(@ApiParam(value = "Objet Patient mis à jour (à enregistrer)") @RequestBody Patient patient) {
         Patient updatePatient = patientService.updatePatient(patient);
         LOGGER.info("Patient id " + updatePatient.getPatientId() + " mis à jour");
         return updatePatient;

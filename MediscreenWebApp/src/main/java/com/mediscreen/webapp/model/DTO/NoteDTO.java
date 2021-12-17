@@ -1,4 +1,4 @@
-package com.mediscreen.webapp.model;
+package com.mediscreen.webapp.model.DTO;
 
 import com.mediscreen.webapp.validation.ValidNote;
 import lombok.AllArgsConstructor;
@@ -11,27 +11,19 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Note {
+public class NoteDTO {
 
     private String id;
 
     private Integer patientId;
+    private String firstName;
+    private String lastName;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
+    private String sex;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate noteDate;
     @ValidNote
     private String noteText;
-
-    public Note(Integer patientId, String noteText) {
-        this.noteText = noteText;
-        this.patientId = patientId;
-        this.noteDate = LocalDate.now();
-    }
-
-    public Note(Integer patientId) {
-        this.patientId = patientId;
-        this.noteDate = LocalDate.now();
-    }
 
 }

@@ -21,4 +21,10 @@ public interface PatientNotesProxy {
 
     @PostMapping(value = "/patHistory/add")
     Note createNote(@RequestParam Integer patientId, @RequestParam("note") String note);
+
+    @PutMapping(value = "/patHistory/update")
+    Note updateNote(@RequestBody Note note);
+
+    @GetMapping(value = "/patHistory/noteById/{id}")
+    Note getNoteById(@PathVariable String id);
 }

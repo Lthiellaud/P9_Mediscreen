@@ -1,6 +1,7 @@
 package com.mediscreen.mnotes.contoller;
 
 import com.mediscreen.mnotes.controller.NoteController;
+import com.mediscreen.mnotes.exception.NotFoundException;
 import com.mediscreen.mnotes.model.Note;
 import com.mediscreen.mnotes.service.implementation.NoteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -16,6 +20,7 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -64,13 +69,69 @@ class NoteControllerTest {
         LocalDate aujourdHui = LocalDate.now();
         when(noteService.createNote(1,"Nouvelle note Patient 1"))
                 .thenReturn(newNote);
-        mockMvc.perform(post("/patHistory/add").param("patientId","1")
-                .param("note","Nouvelle note Patient 1"))
+
+        mockMvc.perform(post("/patHistory/add")
+                    .param("patientId","1")
+                    .param("note","Nouvelle note Patient 1"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("noteDate", is(aujourdHui.toString())))
-                .andExpect(jsonPath("note", is("Nouvelle note Patient 1")))
+                .andExpect(jsonPath("noteText", is("Nouvelle note Patient 1")))
                 .andDo(print());
     }
 
+    @Test
+    public void updateNoteTest() throws Exception {
+        Note updatedNote = new Note("noteId", 1, LocalDate.of(2021, 12,1), "texte de la note");
+        when(noteService.updateNote(any(Note.class))).thenReturn(updatedNote);
+        RequestBuilder createRequest = MockMvcRequestBuilders
+                .put("/patHistory/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"id\": \"noteId1\",\n" +
+                        "    \"patientId\": \"1\",\n" +
+                        "    \"noteDate\": \"2021-12-01\",\n" +
+                        "    \"note\": \"texte de la note\"\n" +
+                        "}");
+        mockMvc.perform(createRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("noteDate", is("2021-12-01")))
+                .andExpect(jsonPath("noteText", is("texte de la note")))
+                .andDo(print());
+    }
+
+    @Test
+    public void updateNoteBadRequestTest() throws Exception {
+        Note updatedNote = new Note("noteId", 1, LocalDate.of(2021, 12,1), "texte de la note");
+        when(noteService.updateNote(any(Note.class))).thenReturn(updatedNote);
+        RequestBuilder updateRequest = MockMvcRequestBuilders
+                .put("/patHistory/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"id\": \"noteId1\",\n" +
+                        "    \"patientId\": \"1\",\n" +
+                        "    \"noteDate\": \"2021-21-01\",\n" +
+                        "    \"note\": \"Texte de la note\"\n" +
+                        "}");
+        mockMvc.perform(updateRequest)
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void updateNoteNotFoundTest() throws Exception {
+        when(noteService.updateNote(any(Note.class))).thenThrow(new NotFoundException("non trouvé"));
+        RequestBuilder createRequest = MockMvcRequestBuilders
+                .put("/patHistory/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"id\": \"noteId1\",\n" +
+                        "    \"patientId\": \"1\",\n" +
+                        "    \"noteDate\": \"2021-12-01\",\n" +
+                        "    \"note\": \"Texte de la note\"\n" +
+                        "}");
+        mockMvc.perform(createRequest)
+                .andExpect(status().isNotFound());
+
+    }
 
 }

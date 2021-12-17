@@ -2,10 +2,7 @@ package com.mediscreen.mnotes.controller;
 
 import com.mediscreen.mnotes.model.Note;
 import com.mediscreen.mnotes.service.NoteService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +21,27 @@ public class NoteController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteController.class);
 
+    /*--------------------------------------------------------------------------------*/
     @ApiOperation(value = "Liste des notes prises pour un patient")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK")})
     @GetMapping(value = "/patHistory/notesByPatientId/{id}")
-    public List<Note> getAllNotesByPatientId(@PathVariable Integer id) {
+    public List<Note> getAllNotesByPatientId(@ApiParam(value = "Id du patient") @PathVariable Integer id) {
         return noteService.getAllNotesByPatientId(id);
     }
 
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = "Récupération d'une note à partir de son Id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 404, message = "noteId {noteId} non trouvé"),
+            @ApiResponse(code = 400, message = "Bad request")})
+    @GetMapping(value = "/patHistory/noteById/{id}")
+    public Note getNoteById(@ApiParam(value = "Id de la note") @PathVariable String id) {
+        return noteService.getNoteById(id);
+    }
+
+    /*--------------------------------------------------------------------------------*/
     @ApiOperation(value = "Liste de l'ensemble des notes de la base")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK")})
@@ -40,15 +50,30 @@ public class NoteController {
         return noteService.getAllNotes();
     }
 
+    /*--------------------------------------------------------------------------------*/
     @ApiOperation(value = "Création d'une nouvelle note pour le patient {patId}")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 400, message = "Bad request")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/patHistory/add")
-    public Note createNote(@RequestParam("patientId") Integer patientId, @RequestParam("note") String note) {
+    public Note createNote(@ApiParam(value = "Id du patient") @RequestParam("patientId") Integer patientId,
+                           @ApiParam(value = "Note du médecin") @RequestParam("note") String note) {
         LOGGER.info("Note à ajouter pour le Patient id " + patientId);
         return noteService.createNote(patientId, note);
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = "Mise à jour d'une note pour le patient")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 404, message = "noteId {noteId} non trouvé"),
+            @ApiResponse(code = 400, message = "Bad request")})
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "/patHistory/update")
+    public Note updateNote(@ApiParam(value = "Objet Note mis à jour (à enregistrer)") @RequestBody Note note) {
+        LOGGER.info("Note "+ note.getId() + " à mettre à jour pour le Patient id " + note.getPatientId());
+        return noteService.updateNote(note);
     }
 
 }

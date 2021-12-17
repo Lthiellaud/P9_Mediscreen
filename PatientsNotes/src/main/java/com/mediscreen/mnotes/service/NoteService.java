@@ -9,4 +9,6 @@ public interface NoteService {
     List<Note> getAllNotesByPatientId(Integer patientId);
     List<Note> getAllNotes();
     Note createNote(Integer patientId, String note);
+    Note updateNote(Note note);
+    Note getNoteById(String id);
 }

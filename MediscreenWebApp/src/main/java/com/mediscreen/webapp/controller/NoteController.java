@@ -1,9 +1,10 @@
 package com.mediscreen.webapp.controller;
 
-import com.mediscreen.webapp.exception.AlreadyExistException;
 import com.mediscreen.webapp.exception.NotFoundException;
+import com.mediscreen.webapp.mapper.NoteDTOMapper;
+import com.mediscreen.webapp.mapper.NotesListDTOMapper;
+import com.mediscreen.webapp.model.DTO.NoteDTO;
 import com.mediscreen.webapp.model.Note;
-import com.mediscreen.webapp.model.Patient;
 import com.mediscreen.webapp.proxies.PatientManagementProxy;
 import com.mediscreen.webapp.proxies.PatientNotesProxy;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 @Controller
 public class NoteController {
 
+
     @Autowired
     private PatientNotesProxy patientNotesProxy;
 
@@ -34,8 +36,8 @@ public class NoteController {
     @GetMapping("/patHistory/allByPatient/{patientId}")
     public String listNotesByPatient(@PathVariable("patientId") Integer patientId, Model model, RedirectAttributes attributes) {
         try {
-            model.addAttribute("patient", patientManagementProxy.getPatientById(patientId));
-            model.addAttribute("notes", patientNotesProxy.getAllNotesByPatientId(patientId));
+            model.addAttribute("notesList", NotesListDTOMapper.INSTANCE.from(
+                    patientManagementProxy.getPatientById(patientId), patientNotesProxy.getAllNotesByPatientId(patientId)));
             return "note/listPatient";
         } catch (NotFoundException e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
@@ -56,8 +58,7 @@ public class NoteController {
     @GetMapping("/patHistory/add/{patientId}")
     public String showAddNoteForm(@PathVariable Integer patientId, Model model, RedirectAttributes attributes) {
         try {
-            model.addAttribute("patient", patientManagementProxy.getPatientById(patientId));
-            model.addAttribute(new Note());
+            model.addAttribute("noteDTO", NoteDTOMapper.INSTANCE.from(patientManagementProxy.getPatientById(patientId), new Note()));
             return "note/add";
         } catch (NotFoundException e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
@@ -66,33 +67,70 @@ public class NoteController {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
             attributes.addFlashAttribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard");
         }
-        return "redirect:/note/listPatient";
-
+        return "redirect:/patHistory/allByPatient/" + patientId;
     }
 
     @PostMapping("/patHistory/add/{patientId}")
-    public String addNote(@PathVariable Integer patientId, @ModelAttribute("note") @Valid Note note,
-                          @ModelAttribute("patient") Patient patient, BindingResult result,
-                          Model model, RedirectAttributes attributes) {
+    public String addNote(@PathVariable Integer patientId, @ModelAttribute("noteDTO") @Valid NoteDTO noteDTO,
+                          BindingResult result, RedirectAttributes attributes) {
+        System.out.println("test");
         if (result.hasErrors()) {
             LOGGER.debug("Mauvaise saisie");
             return "note/add";
         }
         try {
-            Note addedNote = patientNotesProxy.createNote(patientId, note.getNote());
+            Note addedNote = patientNotesProxy.createNote(patientId, noteDTO.getNoteText());
             LOGGER.info("Note id " + addedNote.getId() + " créée ");
             attributes.addFlashAttribute("message", "Note ajoutée pour le patient id " + addedNote.getPatientId());
-        } catch (AlreadyExistException e) {
-            LOGGER.error("Problème lors de la création du patient " + e.toString());
-            attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("Problème lors de la création du patient " + e.toString());
-            attributes.addFlashAttribute("message", "Problème lors de la création du patient, réessayer plus tard");
+            LOGGER.error("Problème lors de la création de la note " + e.toString());
+            attributes.addFlashAttribute("message", "Problème lors de la création de la note, réessayer plus tard");
         }
 
-        return "redirect:/patient/list";
+        return "redirect:/patHistory/allByPatient/" + patientId;
 
     }
 
+    @GetMapping("/patHistory/update/{patientId}/{noteId}")
+    public String showUpdateNoteForm(@PathVariable Integer patientId, @PathVariable String noteId,
+                                     Model model, RedirectAttributes attributes) {
+        try {
+            model.addAttribute("noteDTO", NoteDTOMapper.INSTANCE.from(
+                    patientManagementProxy.getPatientById(patientId), patientNotesProxy.getNoteById(noteId)));
+            return "note/update";
+        } catch (NotFoundException e) {
+            LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("message", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard");
+        }
+        return "redirect:/patHistory/allByPatient/" + patientId;
+
+    }
+
+    @PostMapping("/patHistory/update/{patientId}/{noteId}")
+    public String updateNote(@PathVariable Integer patientId, @PathVariable String noteId, @ModelAttribute("noteDTO") @Valid NoteDTO noteDTO,
+                             BindingResult result, RedirectAttributes attributes) {
+
+        if (result.hasErrors()) {
+            LOGGER.debug("Mauvaise saisie : " + result.getErrorCount() + " erreurs");
+            return "note/update";
+        }
+        try {
+            Note updatedNote = patientNotesProxy.updateNote(new Note(noteId, patientId, noteDTO.getNoteDate(), noteDTO.getNoteText()));
+            LOGGER.info("Note id " + updatedNote.getId() + " mise à jour");
+            attributes.addFlashAttribute("message", "Note mise à jour pour le patient id " + updatedNote.getPatientId());
+        } catch (NotFoundException e) {
+            LOGGER.error("Problème lors de la mise à jour de la note " + e.toString());
+            attributes.addFlashAttribute("message", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Problème lors de la mise à jour de la note " + e.toString());
+            attributes.addFlashAttribute("message", "Problème lors de la mise à jour de la note, réessayer plus tard");
+        }
+
+        return "redirect:/patHistory/allByPatient/" + patientId;
+
+    }
 
 }

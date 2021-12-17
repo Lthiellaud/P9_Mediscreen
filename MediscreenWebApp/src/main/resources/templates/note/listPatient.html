@@ -10,21 +10,21 @@
 <body>
 <div class="container">
     <div class="row"><h3
-            th:text="${'Liste des notes enregistrées pour le patient id ' + patient.patientId}"></h3>
+            th:text="${'Liste des notes enregistrées pour le patient id ' + notesList.patientId}"></h3>
     </div>
-    <div class="row"><p th:text="${'Nom : ' + patient.firstName + ' ' + patient.lastName}"
+    <div class="row"><p th:text="${'Nom : ' + notesList.firstName + ' ' + notesList.lastName}"
                         style="color: #0056b3;"></p></div>
     <div class="row"><p
-            th:text="${'Sexe : ' + patient.sex + ' / Date de naissance : ' + patient.birthDate}"
+            th:text="${'Sexe : ' + notesList.sex + ' / Date de naissance : ' + notesList.birthDate}"
             style="color: #0056b3;"></p></div>
     <div class="row">
-        <p th:if="${message != null}" th:utext="${message}" style="color: red;">Result message</p>
+        <p th:if="${message != null}" th:text="${message}" style="color: red;">Result message</p>
         <p th:unless="${message != null}">&nbsp;</p>
     </div>
     <div class="row">
         <div class="col-sm-12">
             <a class="btn btn-danger btn-sm" href="/patient/list">Retour</a>
-            <a th:href="@{/patHistory/add/{patientId}(patientId=${patient.patientId})}"
+            <a th:href="@{/patHistory/add/{patientId}(patientId=${notesList.patientId})}"
                class="btn btn-primary btn-sm">Nouvelle Note</a>
         </div>
     </div>
@@ -39,14 +39,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${#lists.isEmpty(notes)}">
+            <tr th:if="${#lists.isEmpty(notesList.notes)}">
                 <td colspan="6">Aucune note enregistrée</td>
             </tr>
-            <tr th:each="note :${notes}">
+            <tr th:each="note :${notesList.notes}">
                 <td><span th:text="${note.noteDate}"> Date </span></td>
-                <td><span th:utext="${note.note}"> Note </span></td>
+                <td><span th:utext="${note.noteText}"> Note </span></td>
                 <td>
-
+                    <a th:href="@{/patHistory/update/{patientId}/{noteId}(patientId=${notesList.patientId}, noteId=${note.id})}">Edit</a>
                 </td>
             </tr>
             </tbody>

@@ -1,5 +1,6 @@
 package com.mediscreen.mnotes.service.implementation;
 
+import com.mediscreen.mnotes.exception.NotFoundException;
 import com.mediscreen.mnotes.model.Note;
 import com.mediscreen.mnotes.repository.NoteRepository;
 import com.mediscreen.mnotes.service.NoteService;
@@ -48,5 +49,25 @@ public class NoteServiceImpl implements NoteService {
     public Note createNote(Integer patientId, String note) {
         LOGGER.info("Demande d'ajout d'une note pour patient " + patientId);
         return noteRepository.save(new Note(patientId, note));
+    }
+
+    /**
+     * Mise à jour d'une note existente
+     * @param note note
+     * @return la note mise à jour
+     */
+    @Override
+    public Note updateNote(Note note) {
+        LOGGER.info("Demande de mise à jour d'une note pour patient " + note.getPatientId());
+        getNoteById(note.getId());
+        return noteRepository.save(note);
+    }
+
+    @Override
+    public Note getNoteById(String id) {
+        return noteRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Note non trouvée");
+            return new NotFoundException("noteId " + id + " non trouvé");
+        });
     }
 }
