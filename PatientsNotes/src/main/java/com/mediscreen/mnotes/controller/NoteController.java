@@ -1,6 +1,7 @@
 package com.mediscreen.mnotes.controller;
 
 import com.mediscreen.mnotes.model.Note;
+import com.mediscreen.mnotes.model.Triggers;
 import com.mediscreen.mnotes.service.NoteService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -28,6 +29,16 @@ public class NoteController {
     @GetMapping(value = "/patHistory/notesByPatientId/{id}")
     public List<Note> getAllNotesByPatientId(@ApiParam(value = "Id du patient") @PathVariable Integer id) {
         return noteService.getAllNotesByPatientId(id);
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = "Décompte des notes d'un patient avec mot clé")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK")})
+    @GetMapping(value = "/patHistory/countNotesByPatientId/{id}")
+    public Long countNotesByPatientIdWithTrigger(@ApiParam(value = "Id du patient") @PathVariable Integer id,
+                                                 @ApiParam(value = "Liste mots clé") @RequestBody Triggers triggers) {
+        return noteService.countNoteByPatientWithTrigger(id, triggers);
     }
 
     /*--------------------------------------------------------------------------------*/
