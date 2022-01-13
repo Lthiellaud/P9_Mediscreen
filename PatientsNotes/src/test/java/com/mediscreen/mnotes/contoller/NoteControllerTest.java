@@ -69,7 +69,7 @@ class NoteControllerTest {
     @Test
     public void countNoteTest() throws Exception {
         RequestBuilder countRequest = MockMvcRequestBuilders
-                .get("/patHistory/countNotesByPatientId/1")
+                .post("/patHistory/countNotesByPatientId/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"triggers\":[\"test\", \"trigger\"]}");
         mockMvc.perform(countRequest)
