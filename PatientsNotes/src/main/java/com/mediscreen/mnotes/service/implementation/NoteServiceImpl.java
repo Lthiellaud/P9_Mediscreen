@@ -2,6 +2,7 @@ package com.mediscreen.mnotes.service.implementation;
 
 import com.mediscreen.mnotes.exception.NotFoundException;
 import com.mediscreen.mnotes.model.Note;
+import com.mediscreen.mnotes.model.Triggers;
 import com.mediscreen.mnotes.repository.NoteRepository;
 import com.mediscreen.mnotes.service.NoteService;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     /**
-     * Sauvegarder une nouvelle note pour un patient donné
+     * Sauvegarder une nouvelle note pour un patient donné.
      * @param patientId Id du patient
      * @param note la note à enregistrer
      * @return La note crée
@@ -52,7 +53,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     /**
-     * Mise à jour d'une note existente
+     * Mise à jour d'une note existente.
      * @param note note
      * @return la note mise à jour
      */
@@ -63,11 +64,28 @@ public class NoteServiceImpl implements NoteService {
         return noteRepository.save(note);
     }
 
+    /**
+     * Renvoi une note à partir de son id.
+     * @param id à trouver
+     * @return La note
+     */
     @Override
     public Note getNoteById(String id) {
         return noteRepository.findById(id).orElseThrow(() -> {
             LOGGER.error("Note non trouvée");
             return new NotFoundException("noteId " + id + " non trouvé");
         });
+    }
+
+    /**
+     * Renvoi le nombre de note contenant au moins un des mots clé d'une liste pour un patient donné.
+     * @param patientId l'id du patient
+     * @param triggers la liste de mot clé
+     * @return le nombre de note
+     */
+    @Override
+    public Long countNoteByPatientWithTrigger(Integer patientId, Triggers triggers) {
+        String transformedTrigger = String.join("|", triggers.getTriggers()) ;
+        return noteRepository.countNoteByPatientIdWithTrigger(patientId, transformedTrigger);
     }
 }

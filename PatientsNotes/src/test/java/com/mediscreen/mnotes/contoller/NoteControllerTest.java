@@ -3,8 +3,10 @@ package com.mediscreen.mnotes.contoller;
 import com.mediscreen.mnotes.controller.NoteController;
 import com.mediscreen.mnotes.exception.NotFoundException;
 import com.mediscreen.mnotes.model.Note;
+import com.mediscreen.mnotes.model.Triggers;
 import com.mediscreen.mnotes.service.implementation.NoteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -65,6 +67,18 @@ class NoteControllerTest {
     }
 
     @Test
+    public void countNoteTest() throws Exception {
+        RequestBuilder countRequest = MockMvcRequestBuilders
+                .get("/patHistory/countNotesByPatientId/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"triggers\":[\"test\", \"trigger\"]}");
+        mockMvc.perform(countRequest)
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("0")))
+                .andDo(print());
+    }
+
+    @Test
     public void addNoteTest() throws Exception {
         LocalDate aujourdHui = LocalDate.now();
         when(noteService.createNote(1,"Nouvelle note Patient 1"))
@@ -83,7 +97,7 @@ class NoteControllerTest {
     public void updateNoteTest() throws Exception {
         Note updatedNote = new Note("noteId", 1, LocalDate.of(2021, 12,1), "texte de la note");
         when(noteService.updateNote(any(Note.class))).thenReturn(updatedNote);
-        RequestBuilder createRequest = MockMvcRequestBuilders
+        RequestBuilder updateRequest = MockMvcRequestBuilders
                 .put("/patHistory/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -92,7 +106,7 @@ class NoteControllerTest {
                         "    \"noteDate\": \"2021-12-01\",\n" +
                         "    \"note\": \"texte de la note\"\n" +
                         "}");
-        mockMvc.perform(createRequest)
+        mockMvc.perform(updateRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("noteDate", is("2021-12-01")))
                 .andExpect(jsonPath("noteText", is("texte de la note")))
