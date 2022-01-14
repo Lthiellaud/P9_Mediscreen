@@ -4,8 +4,6 @@ import com.mediscreen.massessment.model.Patient;
 import com.mediscreen.massessment.model.Triggers;
 import com.mediscreen.massessment.proxies.PatientManagementProxy;
 import com.mediscreen.massessment.proxies.PatientNotesProxy;
-import com.mediscreen.massessment.service.implementation.RiskAssessmentServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class RiskAssessmentServiceImplTest {
+class RiskAssessmentServiceTest {
 
     @MockBean
     private PatientManagementProxy patientManagementProxy;
@@ -27,7 +25,7 @@ class RiskAssessmentServiceImplTest {
     private PatientNotesProxy patientNotesProxy;
 
     @Autowired
-    private RiskAssessmentServiceImpl riskAssessmentService;
+    private RiskAssessmentService riskAssessmentService;
 
     private static Patient patientToAssess = new Patient(1, "Lucas","Ferguson"
             , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399");
