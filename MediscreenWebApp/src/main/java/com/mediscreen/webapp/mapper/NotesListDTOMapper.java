@@ -1,6 +1,5 @@
 package com.mediscreen.webapp.mapper;
 
-import com.mediscreen.webapp.model.DTO.NoteDTO;
 import com.mediscreen.webapp.model.DTO.NotesListDTO;
 import com.mediscreen.webapp.model.Note;
 import com.mediscreen.webapp.model.Patient;
