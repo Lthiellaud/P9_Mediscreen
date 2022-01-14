@@ -2,8 +2,7 @@ package com.mediscreen.mnotes.integration;
 
 import com.mediscreen.mnotes.model.Note;
 import com.mediscreen.mnotes.model.Triggers;
-import com.mediscreen.mnotes.repository.NoteRepository;
-import com.mediscreen.mnotes.service.implementation.NoteServiceImpl;
+import com.mediscreen.mnotes.service.NoteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class NoteServiceImplIT {
+public class NoteServiceIT {
 
     @Autowired
-    public NoteServiceImpl noteService;
+    public NoteService noteService;
 
     @Autowired
     private MongoTemplate mongoTemplate;

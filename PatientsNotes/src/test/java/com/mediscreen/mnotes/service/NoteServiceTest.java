@@ -1,4 +1,4 @@
-package com.mediscreen.mnotes.service.implementation;
+package com.mediscreen.mnotes.service;
 
 import com.mediscreen.mnotes.exception.NotFoundException;
 import com.mediscreen.mnotes.model.Note;
@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class NoteServiceImplTest {
+class NoteServiceTest {
 
     @MockBean
     private NoteRepository noteRepository;
 
     @Autowired
-    private NoteServiceImpl noteService;
+    private NoteService noteService;
 
     @Test
     public void getAllNotesByPatientId() {
