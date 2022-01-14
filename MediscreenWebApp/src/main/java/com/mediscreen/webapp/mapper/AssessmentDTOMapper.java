@@ -22,8 +22,8 @@ public interface AssessmentDTOMapper {
     @Mapping(source = "patient.birthDate", target = "birthDate")
     @Mapping(target = "age", ignore = true)
     @Mapping(source = "patient.sex", target = "sex")
-    @Mapping(source = "assessmentRisk", target = "assessmentRisk")
-    AssessmentDTO from(Patient patient, Integer assessmentRisk);
+    @Mapping(source = "riskAssessment", target = "riskAssessment")
+    AssessmentDTO from(Patient patient, String riskAssessment);
 
     @AfterMapping
     default void calculateAge(Patient patient, @MappingTarget AssessmentDTO dto) {
