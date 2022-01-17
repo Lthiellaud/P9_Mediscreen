@@ -22,7 +22,7 @@ import javax.validation.Valid;
 public class PatientController {
 
     @Autowired
-    PatientManagementProxy patientManagementProxy;
+    private PatientManagementProxy patientManagementProxy;
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientController.class);

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="fr">
+<head>
+    <meta charset="utf-8"/>
+    <title>Evaluation du Risque</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row"><h2
+            th:text="${'Evaluation du Risque de diabète pour le patient ' + assessmentDTO.patientId}"></h2>
+    </div>
+    <div class="row"><p
+            th:text="${'Nom : ' + assessmentDTO.firstName + ' ' + assessmentDTO.lastName}"
+            style="color: #0056b3;"></p></div>
+    <div class="row"><p th:text="${'Sexe : ' + assessmentDTO.sex}" style="color: #0056b3;"></p>
+    </div>
+    <div class="row"><p
+            th:text="${'Date de naissance : ' + assessmentDTO.birthDate + ' (' + assessmentDTO.age + ' ans)'}"
+            style="color: #0056b3;"></p>
+    </div>
+    <div class="row justify-content-center" th:switch="${assessmentDTO.riskAssessment}">
+        <div th:case="'None'"><img src="../None.PNG" title="Aucun risque" alt="None"></div>
+        <div th:case="'Borderline'"><img src="../Borderline.PNG" title="à la limite" alt="Borderline"></div>
+        <div th:case="'In Danger'"><img src="../InDanger.PNG" title="En danger" alt="In Danger"></div>
+        <div th:case="'Early onset'"><img src="../EarlyOnset.PNG" title="Début précoce" alt="Early onset"></div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-12">
+            <a class="btn btn-danger btn-sm" href="/patient/list">Retour</a>
+            <a class="btn btn-primary btn-sm"
+               th:href="@{/patHistory/allByPatient/{patientId}(patientId=${assessmentDTO.patientId})}">Accéder
+                aux notes</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
