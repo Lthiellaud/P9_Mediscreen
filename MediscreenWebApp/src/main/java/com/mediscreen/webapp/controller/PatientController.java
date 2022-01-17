@@ -74,7 +74,7 @@ public class PatientController {
     }
 
     @GetMapping("/patient/add")
-    public String showAddPatientForm(Model model, RedirectAttributes attributes) {
+    public String showAddPatientForm(Model model) {
         model.addAttribute(new Patient());
         return "patient/add";
 

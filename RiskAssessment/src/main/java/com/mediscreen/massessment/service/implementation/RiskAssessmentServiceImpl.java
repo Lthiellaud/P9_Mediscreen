@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Evaluation du risque de développer un diabète par patient.
+ */
 @Service
 public class RiskAssessmentServiceImpl implements RiskAssessmentService {
 
@@ -24,9 +27,15 @@ public class RiskAssessmentServiceImpl implements RiskAssessmentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RiskAssessmentServiceImpl.class);
 
+    /**
+     * Renvoi le niveau de risque d'un patient.
+     * Le calcul est fait en fonction de son age, son sexe et de la présence
+     * @param patientId l'Id du patient à évaluer
+     * @return le niveau de risque du patient
+     */
     @Override
     public String assessRiskLevel(Integer patientId) {
-
+        LOGGER.info("Risque évalué pour le patient id " + patientId);
         Patient patient = patientManagementProxy.getPatientById(patientId);
         Long keyWordsNumber = patientNotesProxy.countNotesByPatientIdWithTrigger(patientId, AssessmentUtil.initTriggers());
         return applyAssessmentAlgorithm(keyWordsNumber, patient.getSex(), DateUtil.getAge(patient.getBirthDate()));

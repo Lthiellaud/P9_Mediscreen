@@ -14,9 +14,9 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
     private MongoTemplate mongoTemplate;
 
     /**
-     * Renvoi le nombre de note contenant un mot mot clé pour un patient donné
+     * Renvoi le nombre de note contenant un mot clé (ou plusieurs) pour un patient donné
      * @param patientId l'id du patient
-     * @param trigger le mot clé
+     * @param trigger mot clé (regex)
      * @return le nombre de note
      */
     @Override

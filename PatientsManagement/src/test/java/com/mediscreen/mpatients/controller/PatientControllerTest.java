@@ -63,6 +63,15 @@ class PatientControllerTest {
     }
 
     @Test
+    public void getPatientByIdTest() throws Exception {
+        when(patientService.getPatientById(1)).thenReturn(existingPatient);
+        mockMvc.perform(get("/patient/patientById/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Lucas")))
+                .andDo(print());
+    }
+
+    @Test
     public void addPatientTest() throws Exception {
         when(patientService.createPatient("New","Patient"
                 , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399"))
@@ -77,6 +86,8 @@ class PatientControllerTest {
                 .andExpect(jsonPath("lastName", is("Patient")))
                 .andExpect(jsonPath("homeAddress", is("2 Warren Street")))
                 .andDo(print());
+
+
     }
 
     @Test
@@ -130,7 +141,7 @@ class PatientControllerTest {
     }
 
     @Test
-    public void updatePatientTest() throws Exception {
+    public void updatePatientExceptionTest() throws Exception {
         when(patientService.updatePatient(any(Patient.class)))
                 .thenThrow(new AlreadyExistException("Patient existe déjà"));
 
@@ -149,6 +160,30 @@ class PatientControllerTest {
 
         mockMvc.perform(createRequest)
                 .andExpect(status().isConflict())
+                .andDo(print());
+    }
+
+    @Test
+    public void updatePatientTest() throws Exception {
+        when(patientService.updatePatient(any(Patient.class)))
+                .thenReturn(existingPatient);
+
+        RequestBuilder updateRequest = MockMvcRequestBuilders
+                .put("/patient/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"patientId\": \"1\",\n" +
+                        "    \"firstName\": \"Lucas\",\n" +
+                        "    \"lastName\": \"Ferguson\",\n" +
+                        "    \"birthDate\": \"1980-01-02\",\n" +
+                        "    \"sex\": \"M\",\n" +
+                        "    \"homeAddress\" : \"address New\",\n" +
+                        "    \"phoneNumber\" : \"333-666-9999\"\n" +
+                        "}");
+
+        mockMvc.perform(updateRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("lastName", is("Ferguson")))
                 .andDo(print());
     }
 }

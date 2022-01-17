@@ -78,7 +78,7 @@ public class NoteController {
     @ApiOperation(value = "Mise à jour d'une note pour le patient")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
-            @ApiResponse(code = 404, message = "noteId {noteId} non trouvé"),
+            @ApiResponse(code = 404, message = "note Id {noteId} non trouvée"),
             @ApiResponse(code = 400, message = "Bad request")})
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/patHistory/update")

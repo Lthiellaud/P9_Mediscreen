@@ -1,12 +1,9 @@
 package com.mediscreen.webapp.proxies;
 
 import com.mediscreen.webapp.model.Note;
-import com.mediscreen.webapp.model.Patient;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 

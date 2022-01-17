@@ -1,4 +1,4 @@
-package com.mediscreen.mpatients.service.implementation;
+package com.mediscreen.mpatients.service;
 
 import com.mediscreen.mpatients.exception.AlreadyExistException;
 import com.mediscreen.mpatients.exception.NotFoundException;
@@ -19,13 +19,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class PatientServiceImplTest {
+class PatientServiceTest {
 
     @MockBean
     private PatientRepository patientRepository;
 
     @Autowired
-    private PatientServiceImpl patientService;
+    private PatientService patientService;
 
     private static Patient existingPatient = new Patient(1, "Lucas","Ferguson"
             , LocalDate.of(1980, 1, 1), "M", "2 Warren Street ", "387-866-1399");

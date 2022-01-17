@@ -3,10 +3,8 @@ package com.mediscreen.mnotes.contoller;
 import com.mediscreen.mnotes.controller.NoteController;
 import com.mediscreen.mnotes.exception.NotFoundException;
 import com.mediscreen.mnotes.model.Note;
-import com.mediscreen.mnotes.model.Triggers;
 import com.mediscreen.mnotes.service.implementation.NoteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -63,6 +61,23 @@ class NoteControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(content().string(containsString("Texte de la note")))
+                .andDo(print());
+    }
+
+    @Test
+    public void getNoteByIdTest() throws Exception {
+        when(noteService.getNoteById("note1")).thenReturn(existingNote);
+        mockMvc.perform(get("/patHistory/noteById/note1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Texte de la note")))
+                .andDo(print());
+    }
+
+    @Test
+    public void getNoteByIdNotFoundTest() throws Exception {
+        when(noteService.getNoteById("note1")).thenThrow(new NotFoundException("non trouvée"));
+        mockMvc.perform(get("/patHistory/noteById/note1"))
+                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 

@@ -41,6 +41,19 @@ class NoteServiceTest {
     }
 
     @Test
+    public void getAllNotes() {
+        List<Note> notesReponse = Arrays.asList(new Note(1,"Nouvelle note"));
+        LocalDate aujourdHui = LocalDate.now();
+        when(noteRepository.findAll()).thenReturn(notesReponse);
+
+        List<Note> notes =  noteService.getAllNotes();
+
+        assertThat(notes.size()).isEqualTo(1);
+        assertThat(notes.get(0).getNoteText()).isEqualTo("Nouvelle note");
+        assertThat(notes.get(0).getNoteDate()).isEqualTo(aujourdHui);
+    }
+
+    @Test
     public void getAllNotesByPatientIdNoNotes() {
         List<Note> notesReponse = new ArrayList<>();
         when(noteRepository.findByPatientId(1)).thenReturn(notesReponse);
@@ -64,11 +77,11 @@ class NoteServiceTest {
 
     @Test
     public void getNoteByIdNotFound() {
-        when(noteRepository.findById("noteId1")).thenThrow(new NotFoundException("note non trouvée"));
+        when(noteRepository.findById("noteId1")).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(NotFoundException.class, () -> noteService.getNoteById("noteId1"));
 
-        assertThat(exception.getMessage()).isEqualTo("note non trouvée");
+        assertThat(exception.getMessage()).isEqualTo("noteId noteId1 non trouvé");
     }
 
     @Test

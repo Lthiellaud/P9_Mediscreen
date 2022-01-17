@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Gestion des notes prises par les médecins)
+ */
 @Service
 public class NoteServiceImpl implements NoteService {
 
