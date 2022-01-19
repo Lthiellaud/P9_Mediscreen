@@ -11,6 +11,7 @@ services:
     container_name: mediscreen-app
     depends_on:
       - patients-ms
+      - notes-ms
     ports:
       - 8090:8090
     volumes:
@@ -28,14 +29,29 @@ services:
     env_file: .env
     environment:
       - JAVA_OPTS=
-        -DMYSQL_ROOT_USER=$MYSQLDB_ROOT_USER
-        -DMYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-        -DMYSQL_DATABASE=$MYSQLDB_DATABASE
+        -DMYSQLDB_USER=$MYSQLDB_USER
+        -DMYSQLDB_PASSWORD=$MYSQLDB_PASSWORD
+        -DMYSQLDB_DATABASE=$MYSQLDB_DATABASE
         -DMYSQLDB_URL=$MYSQLDB_URL
     ports:
       - 8081:8081
     volumes:
       - /logp:/mpatients/logs
+    networks:
+      - mediscreen-net
+
+  notes-ms:
+    depends_on:
+      - notes-db
+    build:
+      context: PatientsNotes
+      dockerfile: Dockerfile
+    container_name: notes-ms
+    env_file: .env
+    ports:
+      - 8082:8082
+    volumes:
+      - /logn:/mnotes/logs
     networks:
       - mediscreen-net
 
@@ -56,8 +72,22 @@ services:
     networks:
       - mediscreen-net
 
+  notes-db:
+    image: mongo:4.2.1
+    container_name: notes-db
+    volumes:
+    - mongodb:/data/db
+    - mongodb_config:/data/configdb
+    ports:
+    - 27018:27017
+    command: mongod
+    networks:
+      - mediscreen-net
+
 volumes:
   db:
+  mongodb:
+  mongodb_config:
 
 networks:
   mediscreen-net:
