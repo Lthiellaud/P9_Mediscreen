@@ -4,15 +4,32 @@ services:
     build:
       context: MediscreenWebApp
       dockerfile: Dockerfile
-    env_file: .env
     container_name: mediscreen-app
+    env_file: .env
     depends_on:
       - patients-ms
       - notes-ms
+      - assessment-ms
     ports:
       - 8090:8090
     volumes:
       - /logm:/mediscreen/logs
+    networks:
+      - mediscreen-net
+
+  assessment-ms:
+    build:
+      context: RiskAssessment
+      dockerfile: Dockerfile
+    container_name: assessment-ms
+    env_file: .env
+    depends_on:
+      - patients-ms
+      - notes-ms
+    ports:
+      - 8083:8083
+    volumes:
+      - /loga:/massessment/logs
     networks:
       - mediscreen-net
 
