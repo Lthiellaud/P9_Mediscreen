@@ -81,14 +81,19 @@ public class NoteServiceImpl implements NoteService {
     }
 
     /**
-     * Renvoi le nombre de note contenant au moins un des mots clé d'une liste pour un patient donné.
+     * Renvoi le nombre de mots clés trouvé dans les notes d'un patient.
+     * *Un mot présent 2 fois dans une même note est compté une seule fois
      * @param patientId l'id du patient
      * @param triggers la liste de mot clé
-     * @return le nombre de note
+     * @return le nombre de mots clé*
      */
     @Override
     public Long countNoteByPatientWithTrigger(Integer patientId, Triggers triggers) {
-        String transformedTrigger = String.join("|", triggers.getTriggers()) ;
-        return noteRepository.countNoteByPatientIdWithTrigger(patientId, transformedTrigger);
+        //String transformedTrigger = String.join("|", triggers.getTriggers()) ;
+
+        return triggers.getTriggers()
+                .stream()
+                .map(trigger -> noteRepository.countNoteByPatientIdWithTrigger(patientId, trigger))
+                .reduce(0L, Long::sum);
     }
 }
