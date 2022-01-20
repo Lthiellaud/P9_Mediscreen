@@ -81,7 +81,7 @@ services:
       - mediscreen-net
 
   notes-db:
-    image: mongo:4.2.1
+    image: mongo:4.2.17
     container_name: notes-db
     volumes:
     - mongodb:/data/db
