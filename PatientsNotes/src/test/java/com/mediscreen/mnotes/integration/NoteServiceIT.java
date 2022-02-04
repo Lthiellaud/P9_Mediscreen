@@ -36,7 +36,7 @@ public class NoteServiceIT {
         noteService.createNote(1, "nouvelle note 4");
         noteService.createNote(11, "nouveau test note 5");
         noteService.createNote(1, "nouveau TriGGer note 6");
-        noteService.createNote(1, "nouveau trigger test note 7");
+        noteService.createNote(1, "Test nouveau trigger test note 7");
 
         List<String> triggers1 = Arrays.asList("test");
         Long result = noteService.countNoteByPatientWithTrigger(1,new Triggers(triggers1));
@@ -44,7 +44,7 @@ public class NoteServiceIT {
 
         List<String> triggers2 = Arrays.asList("test", "trigger");
         Long result2 = noteService.countNoteByPatientWithTrigger(1,new Triggers(triggers2));
-        assertThat(result2).isEqualTo(5);
+        assertThat(result2).isEqualTo(6);
 
         Long result3 = noteService.countNoteByPatientWithTrigger(2,new Triggers(triggers2));
         assertThat(result3).isEqualTo(0);
