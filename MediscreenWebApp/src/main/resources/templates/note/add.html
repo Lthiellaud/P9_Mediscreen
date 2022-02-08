@@ -61,6 +61,7 @@
 <script>
     $('#noteText').summernote({
         height: 100,
+        lineHeights: ['0.6', '0.8', '1.0', '1.2', '1.4'],
         toolbar: [
             [ 'style', [ 'style' ] ],
             [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
@@ -72,6 +73,7 @@
             [ 'view', [ 'undo', 'redo', 'fullscreen', 'help' ] ]
         ]
     });
+    $('#noteText').summernote('lineHeight', 0.8);
 </script>
 </body>
 </html>
