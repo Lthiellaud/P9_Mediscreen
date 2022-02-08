@@ -32,7 +32,7 @@ public class NoteController {
     }
 
     /*--------------------------------------------------------------------------------*/
-    @ApiOperation(value = "Décompte des notes d'un patient avec mot clé")
+    @ApiOperation(value = "Décompte des mots clés dans les notes d'un patient")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK")})
     @PostMapping(value = "/patHistory/countNotesByPatientId/{id}")
