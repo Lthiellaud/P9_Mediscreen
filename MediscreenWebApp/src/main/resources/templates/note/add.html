@@ -16,25 +16,43 @@
 </head>
 <body>
 <div class="container">
-
-    <div class="row"><h3 th:text="${'Ajout d''une nouvelle note pour le patient id ' + noteDTO.patientId}"></h3></div>
-    <div class="row"><p th:text="${'Nom : ' + noteDTO.firstName + ' ' + noteDTO.lastName}" style="color: #0056b3;"></p></div>
-    <div class="row"><p th:text="${'Sexe : ' + noteDTO.sex + ' / Date de naissance : ' + noteDTO.birthDate}" style="color: #0056b3;"></p></div>
-    <div class="row">
-        <p th:if="${message != null}" th:text="${message}" style="color: red;">Result message</p>
-        <p th:unless="${message != null}">&nbsp;</p>
+    <div class="row"><p><span><br/></span></p></div>
+    <div class="row bg-info">
+        <h4 style="color: #0056b3;">
+            <strong>Ajout d'une note</strong>
+        </h4>
     </div>
-
+    <div class="row">
+        <h5 style="color: #0056b3;"><strong><u>Patient</u></strong></h5>
+        <div class="col-sm-12">
+            <p style="color: #0056b3;">
+                <strong>Identifiant : </strong><span th:text="${noteDTO.patientId}"></span>
+                <span><br/></span>
+                <strong>Nom : </strong><span
+                    th:text="${noteDTO.firstName + ' ' + noteDTO.lastName}"></span>
+                <span><br/></span>
+                <strong>Sexe : </strong><span th:text="${noteDTO.sex}"></span>
+                <span><br/></span>
+                <strong>Date de naissance : </strong><span th:text="${noteDTO.birthDate}"></span>
+            </p>
+        </div>
+    </div>
 
     <div class="row">
         <form action="#" th:action="@{/patHistory/add/{patientId}(patientId=${noteDTO.patientId})}" th:object="${noteDTO}" method="post"
               class="form-horizontal" style="width: 100%">
             <div class="form-group">
-                <div class="col-sm-12">Texte de la note à ajouter :</div>
+                <div class="col-sm-12">
+                    <h5 style="color: #0056b3;"><strong><u>Texte de la note à ajouter :</u></strong></h5>
+                </div>
                 <div class="col-sm-12">
                     <textarea id="noteText" name="noteText" th:field="*{noteText}"></textarea>
                 </div>
-                <p class="text-danger" th:if="${#fields.hasErrors('noteText')}" th:errors="*{noteText}"></p>
+                <div th:if="${#fields.hasErrors('noteText')}" class="alert alert-danger" role="alert">
+                    <strong>
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span th:errors="*{noteText}"></span></strong>
+                </div>
             </div>
             <div class="row">
                 <p>&nbsp;</p>
@@ -70,10 +88,10 @@
             [ 'color', [ 'color' ] ],
             [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
             [ 'table', [ 'table' ] ],
-            [ 'view', [ 'undo', 'redo', 'fullscreen', 'help' ] ]
+            [ 'view', [ 'undo', 'redo', 'help' ] ]
         ]
     });
-    $('#noteText').summernote('lineHeight', 0.8);
+    $('#noteText').summernote('lineHeight', 0.6);
 </script>
 </body>
 </html>

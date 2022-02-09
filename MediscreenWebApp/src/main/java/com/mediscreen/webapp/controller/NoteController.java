@@ -41,9 +41,11 @@ public class NoteController {
             return "note/listPatient";
         } catch (NotFoundException e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard");
         }
         return "redirect:/patient/list";
@@ -62,9 +64,11 @@ public class NoteController {
             return "note/add";
         } catch (NotFoundException e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard");
         }
         return "redirect:/patHistory/allByPatient/" + patientId;
@@ -73,7 +77,7 @@ public class NoteController {
     @PostMapping("/patHistory/add/{patientId}")
     public String addNote(@PathVariable Integer patientId, @ModelAttribute("noteDTO") @Valid NoteDTO noteDTO,
                           BindingResult result, RedirectAttributes attributes) {
-        System.out.println("test");
+
         if (result.hasErrors()) {
             LOGGER.debug("Mauvaise saisie");
             return "note/add";
@@ -81,9 +85,11 @@ public class NoteController {
         try {
             Note addedNote = patientNotesProxy.createNote(patientId, noteDTO.getNoteText());
             LOGGER.info("Note id " + addedNote.getId() + " créée ");
+            attributes.addFlashAttribute("messageType", "success");
             attributes.addFlashAttribute("message", "Note ajoutée pour le patient id " + addedNote.getPatientId());
         } catch (Exception e) {
             LOGGER.error("Problème lors de la création de la note " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", "Problème lors de la création de la note, réessayer plus tard");
         }
 
@@ -100,9 +106,11 @@ public class NoteController {
             return "note/update";
         } catch (NotFoundException e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard");
         }
         return "redirect:/patHistory/allByPatient/" + patientId;
@@ -120,12 +128,15 @@ public class NoteController {
         try {
             Note updatedNote = patientNotesProxy.updateNote(new Note(noteId, patientId, noteDTO.getNoteDate(), noteDTO.getNoteText()));
             LOGGER.info("Note id " + updatedNote.getId() + " mise à jour");
+            attributes.addFlashAttribute("messageType", "success");
             attributes.addFlashAttribute("message", "Note mise à jour pour le patient id " + updatedNote.getPatientId());
         } catch (NotFoundException e) {
             LOGGER.error("Problème lors de la mise à jour de la note " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
             LOGGER.error("Problème lors de la mise à jour de la note " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", "Problème lors de la mise à jour de la note, réessayer plus tard");
         }
 
