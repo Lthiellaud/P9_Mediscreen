@@ -3,35 +3,53 @@
 	  xmlns:th="http://www.thymeleaf.org"
 	  lang="fr">
 <head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+	<meta charset="utf-8"/>
+	<title>Patients</title>
+	<!-- include libraries(jQuery, bootstrap) -->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		  rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container">
-	<div class="row"><h2>Liste des Patients</h2></div>
-	<div class="row">
-		<div class="col-sm-12">
-			<a href="/patient/add" class="btn btn-primary btn-sm">Nouveau Patient</a>
-			<a class="btn btn-danger btn-sm" href="/home">Retour</a>
-		</div>
+	<div class="row"><p><span><br/></span></p></div>
+	<div class="row bg-info">
+		<h4 style="color: #0056b3;">
+			<strong>Liste des Patients</strong>
+		</h4>
 	</div>
+	<div class="row"><p><span><br/></span></p></div>
 	<div class="row">
-		<p th:if="${message != null}" th:text="${message}" style="color: red;">Result message</p>
-		<p th:unless="${message != null}">&nbsp;</p>
+		<a href="/patient/add" class="btn btn-primary btn-sm">Nouveau Patient</a>
+		<a class="btn btn-danger btn-sm" href="/home">Retour</a>
 	</div>
+
+	<!-- Message erreur ou réussite -->
+	<div class="row"><p><br/></p></div>
+	<div th:if="${messageType == 'error'}" class="alert alert-danger" role="alert">
+		<strong>
+			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			<span th:text="${message}"></span></strong>
+	</div>
+	<div th:if="${messageType == 'success'}" class="alert alert-success" role="alert">
+		<strong>
+			<span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+			<span th:text="${message}"></span></strong>
+	</div>
+
 	<div class="row">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th>Id</th>
-					<th>Prénom</th>
-					<th>Nom</th>
-					<th>Date de naissance</th>
-					<th>Genre</th>
-					<th>Adresse</th>
-					<th>Téléphone</th>
-					<th>Action</th>
+					<th style="width: 5%">Id</th>
+					<th style="width: 15%">Prénom</th>
+					<th style="width: 15%">Nom</th>
+					<th style="width: 13%">Date de naissance</th>
+					<th style="width: 5%">Genre</th>
+					<th style="width: 20%">Adresse</th>
+					<th style="width: 12%">Téléphone</th>
+					<th style="width: 15%">Action</th>
 				</tr>
 			</thead>
 			<tbody>
