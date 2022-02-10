@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Patient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mpatients</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mpatients.model</a> &gt; <span class="el_source">Patient.java</span></div><h1>Patient.java</h1><pre class="source lang-java linenums">package com.mediscreen.mpatients.model;
+
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDate;
+
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name=&quot;patient&quot;)
+public class Patient implements Serializable {
+
+    @ApiModelProperty(value = &quot;Id du patient&quot;)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer patientId;
+    @ApiModelProperty(value = &quot;Prénom du patient&quot;, required = true, example = &quot;Test&quot;, position = 1)
+    @NotNull
+    private String firstName;
+    @ApiModelProperty(value = &quot;Nom de famille du patient&quot;,required = true, example = &quot;TestNone&quot;, position = 2)
+    @NotNull
+    private String lastName;
+    @ApiModelProperty(value = &quot;Date de naissance du patient&quot;, required = true, example = &quot;1966-12-31&quot;, position = 3)
+    @NotNull
+    private LocalDate birthDate;
+    @ApiModelProperty(value = &quot;Genre (M ou F)&quot;, required = true, example = &quot;F&quot;, position = 4)
+    @NotNull
+    private String sex;
+    @ApiModelProperty(value = &quot;Adresse postale du patient&quot;, example = &quot;1 Brookside St&quot;, allowEmptyValue = true, position = 5)
+    private String homeAddress;
+    @ApiModelProperty(value = &quot;Numéro de téléphone du patient&quot;, example = &quot;100-222-3333&quot;, allowEmptyValue = true, position = 6)
+    private String phoneNumber;
+
+<span class="fc" id="L44">    public Patient(String firstName, String lastName, LocalDate birthDate, String sex, String homeAddress, String phoneNumber) {</span>
+<span class="fc" id="L45">        this.firstName = firstName;</span>
+<span class="fc" id="L46">        this.lastName = lastName;</span>
+<span class="fc" id="L47">        this.birthDate = birthDate;</span>
+<span class="fc" id="L48">        this.sex = sex;</span>
+<span class="fc" id="L49">        this.homeAddress = homeAddress;</span>
+<span class="fc" id="L50">        this.phoneNumber = phoneNumber;</span>
+<span class="fc" id="L51">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

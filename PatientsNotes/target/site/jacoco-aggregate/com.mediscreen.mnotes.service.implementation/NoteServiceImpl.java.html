@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NoteServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mnotes</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mnotes.service.implementation</a> &gt; <span class="el_source">NoteServiceImpl.java</span></div><h1>NoteServiceImpl.java</h1><pre class="source lang-java linenums">package com.mediscreen.mnotes.service.implementation;
+
+import com.mediscreen.mnotes.exception.NotFoundException;
+import com.mediscreen.mnotes.model.Note;
+import com.mediscreen.mnotes.model.Triggers;
+import com.mediscreen.mnotes.repository.NoteRepository;
+import com.mediscreen.mnotes.service.NoteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * Gestion des notes prises par les médecins)
+ */
+@Service
+<span class="fc" id="L19">public class NoteServiceImpl implements NoteService {</span>
+
+<span class="fc" id="L21">    private static final Logger LOGGER = LoggerFactory.getLogger(NoteServiceImpl.class);</span>
+
+    @Autowired
+    private NoteRepository noteRepository;
+
+    /**
+     * Récupérer l'ensemble des notes pour un patient donné
+     * @param patientId Id du patient
+     * @return La liste des notes
+     */
+    @Override
+    public List&lt;Note&gt; getAllNotesByPatientId(Integer patientId) {
+<span class="fc" id="L33">        LOGGER.info(&quot;Demande des notes enregistrées pour patient &quot; + patientId);</span>
+<span class="fc" id="L34">        return noteRepository.findByPatientId(patientId);</span>
+    }
+
+    /**
+     * Récupérer l'ensemble des notes
+     * @return L'ensemble des notes enregistrées dans la base
+     */
+    @Override
+    public List&lt;Note&gt; getAllNotes() {
+<span class="fc" id="L43">        return noteRepository.findAll();</span>
+    }
+
+    /**
+     * Sauvegarder une nouvelle note pour un patient donné.
+     * @param patientId Id du patient
+     * @param note la note à enregistrer
+     * @return La note crée
+     */
+    @Override
+    public Note createNote(Integer patientId, String note) {
+<span class="fc" id="L54">        LOGGER.info(&quot;Demande d'ajout d'une note pour patient &quot; + patientId);</span>
+<span class="fc" id="L55">        return noteRepository.save(new Note(patientId, note));</span>
+    }
+
+    /**
+     * Mise à jour d'une note existente.
+     * @param note note
+     * @return la note mise à jour
+     */
+    @Override
+    public Note updateNote(Note note) {
+<span class="fc" id="L65">        LOGGER.info(&quot;Demande de mise à jour d'une note pour patient &quot; + note.getPatientId());</span>
+<span class="fc" id="L66">        getNoteById(note.getId());</span>
+<span class="fc" id="L67">        return noteRepository.save(note);</span>
+    }
+
+    /**
+     * Renvoi une note à partir de son id.
+     * @param id à trouver
+     * @return La note
+     */
+    @Override
+    public Note getNoteById(String id) {
+<span class="fc" id="L77">        return noteRepository.findById(id).orElseThrow(() -&gt; {</span>
+<span class="fc" id="L78">            LOGGER.error(&quot;Note non trouvée&quot;);</span>
+<span class="fc" id="L79">            return new NotFoundException(&quot;noteId &quot; + id + &quot; non trouvé&quot;);</span>
+        });
+    }
+
+    /**
+     * Renvoi le nombre de mots clés trouvé dans les notes d'un patient.
+     * *Un mot présent 2 fois dans une même note est compté une seule fois
+     * @param patientId l'id du patient
+     * @param triggers la liste de mot clé
+     * @return le nombre de mots clé*
+     */
+    @Override
+    public Long countNoteByPatientWithTrigger(Integer patientId, Triggers triggers) {
+        //String transformedTrigger = String.join(&quot;|&quot;, triggers.getTriggers()) ;
+
+<span class="fc" id="L94">        return triggers.getTriggers()</span>
+<span class="fc" id="L95">                .stream()</span>
+<span class="fc" id="L96">                .map(trigger -&gt; noteRepository.countNoteByPatientIdWithTrigger(patientId, trigger))</span>
+<span class="fc" id="L97">                .reduce(0L, Long::sum);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

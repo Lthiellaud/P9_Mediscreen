@@ -1,0 +1,8 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+mpatients,com.mediscreen.mpatients.service.implementation,PatientServiceImpl,7,242,1,13,2,30,2,15,1,9
+mpatients,com.mediscreen.mpatients.controller,PatientController,5,59,0,0,2,10,1,6,1,6
+mpatients,com.mediscreen.mpatients.exception,AlreadyExistException,0,4,0,0,0,2,0,1,0,1
+mpatients,com.mediscreen.mpatients.exception,NotFoundException,0,4,0,0,0,2,0,1,0,1
+mpatients,com.mediscreen.mpatients,MPatientsApplication,5,3,0,0,2,1,1,1,1,1
+mpatients,com.mediscreen.mpatients.configuration,SwaggerConfig,0,17,0,0,0,7,0,2,0,2
+mpatients,com.mediscreen.mpatients.model,Patient,0,21,0,0,0,8,0,1,0,1

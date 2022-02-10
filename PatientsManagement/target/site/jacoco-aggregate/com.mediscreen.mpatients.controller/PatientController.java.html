@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mpatients</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mpatients.controller</a> &gt; <span class="el_source">PatientController.java</span></div><h1>PatientController.java</h1><pre class="source lang-java linenums">package com.mediscreen.mpatients.controller;
+
+import com.mediscreen.mpatients.model.Patient;
+import com.mediscreen.mpatients.service.PatientService;
+import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+
+@Api(&quot;API pour gérer les patients&quot;)
+@RestController
+<span class="fc" id="L19">public class PatientController {</span>
+
+    @Autowired
+    private PatientService patientService;
+
+<span class="fc" id="L24">    private static final Logger LOGGER = LoggerFactory.getLogger(PatientController.class);</span>
+
+    @ApiOperation(value = &quot;Liste des Patients suivis&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Success|OK&quot;)})
+    @GetMapping(value = &quot;/patient/list&quot;)
+    public List&lt;Patient&gt; getAllPatient (){
+<span class="fc" id="L31">        return patientService.getAllPatient();</span>
+    }
+
+    /**
+     * Pour obtenir les données du patient à partir de son id
+     * @param id id patient
+     * @return les données patient
+     */
+    @ApiOperation(value = &quot;Récupérer les données d'un patient par son id&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Suceess|OK&quot;),
+            @ApiResponse(code = 404, message = &quot;patientId {id} non trouvé&quot;) })
+    @GetMapping(value = &quot;/patient/patientById/{id}&quot;)
+    public Patient getPatientById (@ApiParam(value = &quot;id du patient&quot;) @PathVariable Integer id){
+<span class="fc" id="L45">        return patientService.getPatientById(id);</span>
+    }
+
+    /**
+     * Pour ajouter un patient
+     * @param lastName Nom
+     * @param firstName prénom
+     * @param birthDate date de naissance
+     * @param sex genre
+     * @param address adresse postale
+     * @param phone téléphone
+     * @return le patient ajouté
+     */
+    @ApiOperation(value = &quot;Ajouter un nouveau patient&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = &quot;Created&quot;),
+            @ApiResponse(code = 409, message = &quot;Un patient existe déjà avec ces mêmes données clé (patientId {id})&quot;)})
+    @PostMapping(value = &quot;/patient/add&quot;)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Patient addPatient(@ApiParam(value = &quot;Nom de famille&quot;) @RequestParam(&quot;family&quot;) String lastName,
+                              @ApiParam(value = &quot;Prénom&quot;) @RequestParam(&quot;given&quot;) String firstName,
+                              @ApiParam(value = &quot;Date de naissance (format aaaa-mm-jj)&quot;) @RequestParam (&quot;dob&quot;) @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate birthDate,
+                              @ApiParam(value = &quot;Genre (F ou M)&quot;) @RequestParam String sex,
+                              @ApiParam(value = &quot;Adresse&quot;) @RequestParam(required = false) String address,
+                              @ApiParam(value = &quot;Téléphone&quot;) @RequestParam(required = false) String phone) {
+<span class="fc" id="L70">        Patient patient = patientService.createPatient(lastName, firstName, birthDate, sex, address, phone);</span>
+<span class="fc" id="L71">        LOGGER.info(&quot;Patient créé - id &quot; + patient.getPatientId());</span>
+<span class="fc" id="L72">        return patient;</span>
+
+    }
+
+    /**
+     * Pour mettre à jour un patient
+     * @param patient le patient à mettre à jour
+     * @return le patient mis à jour
+     */
+    @ApiOperation(value = &quot;Mettre à jour un  patient&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Suceess|OK&quot;),
+            @ApiResponse(code = 404, message = &quot;patientId {id} non trouvé&quot;),
+            @ApiResponse(code = 409, message = &quot;Un patient existe déjà avec ces mêmes données clé (patientId {id})&quot;) })
+    @PutMapping(value = &quot;/patient/update&quot;)
+    public Patient updatePatient(@ApiParam(value = &quot;Objet Patient mis à jour (à enregistrer)&quot;) @RequestBody Patient patient) {
+<span class="fc" id="L88">        Patient updatePatient = patientService.updatePatient(patient);</span>
+<span class="fc" id="L89">        LOGGER.info(&quot;Patient id &quot; + updatePatient.getPatientId() + &quot; mis à jour&quot;);</span>
+<span class="fc" id="L90">        return updatePatient;</span>
+
+    }
+
+    /**
+     * Pour supprimer un patient
+     * @param id l'id du patient à supprimer
+     */
+    @ApiOperation(value = &quot;Supprimer un  patient&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = &quot;No content&quot;),
+            @ApiResponse(code = 404, message = &quot;patientId {id} non trouvé&quot;)
+    })
+    @DeleteMapping(value = &quot;/patient/delete/{id}&quot;)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePatient(@ApiParam(value = &quot;id du patient&quot;) @PathVariable Integer id) {
+<span class="nc" id="L106">        patientService.deletePatient(id);</span>
+<span class="nc" id="L107">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
