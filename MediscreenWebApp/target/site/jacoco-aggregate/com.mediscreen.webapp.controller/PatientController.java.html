@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">webapp</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.webapp.controller</a> &gt; <span class="el_source">PatientController.java</span></div><h1>PatientController.java</h1><pre class="source lang-java linenums">package com.mediscreen.webapp.controller;
+
+import com.mediscreen.webapp.exception.AlreadyExistException;
+import com.mediscreen.webapp.exception.NotFoundException;
+import com.mediscreen.webapp.model.Patient;
+import com.mediscreen.webapp.proxies.PatientManagementProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+
+@Controller
+<span class="fc" id="L22">public class PatientController {</span>
+
+    @Autowired
+    private PatientManagementProxy patientManagementProxy;
+
+
+<span class="fc" id="L28">    private static final Logger LOGGER = LoggerFactory.getLogger(PatientController.class);</span>
+
+    @GetMapping(&quot;/patient/list&quot;)
+    public String listPatient(Model model) {
+<span class="fc" id="L32">        model.addAttribute(&quot;patients&quot;, patientManagementProxy.getAllPatient());</span>
+<span class="fc" id="L33">        return &quot;patient/list&quot;;</span>
+    }
+
+    @GetMapping(&quot;/patient/update/{id}&quot;)
+    public String showUpdatePatientForm(@PathVariable(&quot;id&quot;) Integer id, Model model, RedirectAttributes attributes) {
+        try {
+<span class="fc" id="L39">            model.addAttribute(&quot;patient&quot;, patientManagementProxy.getPatientById(id));</span>
+<span class="fc" id="L40">            return &quot;patient/update&quot;;</span>
+<span class="fc" id="L41">        } catch (NotFoundException e) {</span>
+<span class="fc" id="L42">            LOGGER.error(&quot;Problème lors de la récupération des données &quot; + e.toString());</span>
+<span class="fc" id="L43">            attributes.addFlashAttribute(&quot;messageType&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L44">            attributes.addFlashAttribute(&quot;message&quot;, e.getMessage());</span>
+<span class="fc" id="L45">        } catch (Exception e) {</span>
+<span class="fc" id="L46">            LOGGER.error(&quot;Problème lors de la récupération des données &quot; + e.toString());</span>
+<span class="fc" id="L47">            attributes.addFlashAttribute(&quot;messageType&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L48">            attributes.addFlashAttribute(&quot;message&quot;, &quot;Problème lors de la récupération des données, Merci de réessayer plus tard&quot;);</span>
+<span class="fc" id="L49">        }</span>
+<span class="fc" id="L50">        return &quot;redirect:/patient/list&quot;;</span>
+
+    }
+
+    @PostMapping(&quot;/patient/update/{id}&quot;)
+    public String updatePatient(@PathVariable(&quot;id&quot;) Integer id, @ModelAttribute(&quot;patient&quot;) @Valid Patient patient,
+                                BindingResult result, RedirectAttributes attributes) {
+<span class="fc" id="L57">        patient.setPatientId(id);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L59">            LOGGER.debug(&quot;Mauvaise saisie pour id : &quot; + id);</span>
+<span class="fc" id="L60">            return &quot;patient/update&quot;;</span>
+        }
+        try {
+<span class="fc" id="L63">            patientManagementProxy.updatePatient(patient);</span>
+<span class="fc" id="L64">            LOGGER.info(&quot;Patient id &quot; + id + &quot; updated&quot;);</span>
+<span class="fc" id="L65">            attributes.addFlashAttribute(&quot;messageType&quot;, &quot;success&quot;);</span>
+<span class="fc" id="L66">            attributes.addFlashAttribute(&quot;message&quot;, &quot;Patient mis à jour&quot;);</span>
+<span class="fc" id="L67">        } catch (NotFoundException | AlreadyExistException e) {</span>
+<span class="fc" id="L68">            LOGGER.error(&quot;Problème pendant la mise à jour patient &quot; + e.toString());</span>
+<span class="fc" id="L69">            attributes.addFlashAttribute(&quot;messageType&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L70">            attributes.addFlashAttribute(&quot;message&quot;, e.getMessage());</span>
+<span class="fc" id="L71">        } catch (Exception e) {</span>
+<span class="fc" id="L72">            LOGGER.error(&quot;Problème pendant la mise à jour &quot; + e.toString());</span>
+<span class="fc" id="L73">            attributes.addFlashAttribute(&quot;messageType&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L74">            attributes.addFlashAttribute(&quot;message&quot;, &quot;Problème pendant la mise à jour, réessayer plus tard&quot;);</span>
+<span class="fc" id="L75">        }</span>
+
+<span class="fc" id="L77">        return &quot;redirect:/patient/list&quot;;</span>
+
+    }
+
+    @GetMapping(&quot;/patient/add&quot;)
+    public String showAddPatientForm(Model model) {
+<span class="fc" id="L83">        model.addAttribute(new Patient());</span>
+<span class="fc" id="L84">        return &quot;patient/add&quot;;</span>
+
+    }
+
+    @PostMapping(&quot;/patient/validate&quot;)
+    public String addPatient(@ModelAttribute(&quot;patient&quot;) @Valid Patient patient,
+                                BindingResult result, Model model, RedirectAttributes attributes) {
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L92">            LOGGER.debug(&quot;Mauvaise saisie&quot;);</span>
+<span class="fc" id="L93">            return &quot;patient/add&quot;;</span>
+        }
+        try {
+<span class="fc" id="L96">            Patient addedPatient = patientManagementProxy.addPatient(</span>
+<span class="fc" id="L97">                    patient.getLastName(),</span>
+<span class="fc" id="L98">                    patient.getFirstName(),</span>
+<span class="fc" id="L99">                    patient.getBirthDate(),</span>
+<span class="fc" id="L100">                    patient.getSex(),</span>
+<span class="fc" id="L101">                    patient.getHomeAddress(),</span>
+<span class="fc" id="L102">                    patient.getPhoneNumber());</span>
+<span class="fc" id="L103">            LOGGER.info(&quot;Patient id &quot; + addedPatient.getPatientId() + &quot; créé &quot;);</span>
+<span class="fc" id="L104">            model.addAttribute(&quot;messageType&quot;, &quot;success&quot;);</span>
+<span class="fc" id="L105">            model.addAttribute(&quot;message&quot;, &quot;Patient id &quot; + addedPatient.getPatientId() + &quot; créé&quot;);</span>
+<span class="fc" id="L106">            return &quot;patient/add&quot;;</span>
+<span class="fc" id="L107">        } catch (AlreadyExistException e) {</span>
+<span class="fc" id="L108">            LOGGER.error(&quot;Problème lors de la création du patient &quot; + e.toString());</span>
+<span class="fc" id="L109">            attributes.addFlashAttribute(&quot;messageType&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L110">            attributes.addFlashAttribute(&quot;message&quot;, e.getMessage());</span>
+<span class="fc" id="L111">        } catch (Exception e) {</span>
+<span class="fc" id="L112">            LOGGER.error(&quot;Problème lors de la création du patient &quot; + e.toString());</span>
+<span class="fc" id="L113">            attributes.addFlashAttribute(&quot;messageType&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L114">            attributes.addFlashAttribute(&quot;message&quot;, &quot;Problème lors de la création du patient, réessayer plus tard&quot;);</span>
+<span class="fc" id="L115">        }</span>
+
+<span class="fc" id="L117">        return &quot;redirect:/patient/list&quot;;</span>
+
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotesListDTOMapperImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">webapp</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.webapp.mapper</a> &gt; <span class="el_source">NotesListDTOMapperImpl.java</span></div><h1>NotesListDTOMapperImpl.java</h1><pre class="source lang-java linenums">package com.mediscreen.webapp.mapper;
+
+import com.mediscreen.webapp.model.DTO.NotesListDTO;
+import com.mediscreen.webapp.model.Note;
+import com.mediscreen.webapp.model.Patient;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Generated;
+
+@Generated(
+    value = &quot;org.mapstruct.ap.MappingProcessor&quot;,
+    date = &quot;2022-02-10T14:41:12+0100&quot;,
+    comments = &quot;version: 1.4.2.Final, compiler: javac, environment: Java 1.8.0_151 (Oracle Corporation)&quot;
+)
+<span class="fc" id="L15">public class NotesListDTOMapperImpl implements NotesListDTOMapper {</span>
+
+    @Override
+    public NotesListDTO from(Patient patient, List&lt;Note&gt; notes) {
+<span class="pc bpc" id="L19" title="3 of 4 branches missed.">        if ( patient == null &amp;&amp; notes == null ) {</span>
+<span class="nc" id="L20">            return null;</span>
+        }
+
+<span class="fc" id="L23">        NotesListDTO notesListDTO = new NotesListDTO();</span>
+
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if ( patient != null ) {</span>
+<span class="fc" id="L26">            notesListDTO.setPatientId( patient.getPatientId() );</span>
+<span class="fc" id="L27">            notesListDTO.setFirstName( patient.getFirstName() );</span>
+<span class="fc" id="L28">            notesListDTO.setLastName( patient.getLastName() );</span>
+<span class="fc" id="L29">            notesListDTO.setBirthDate( patient.getBirthDate() );</span>
+<span class="fc" id="L30">            notesListDTO.setSex( patient.getSex() );</span>
+        }
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        if ( notes != null ) {</span>
+<span class="fc" id="L33">            List&lt;Note&gt; list = notes;</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">            if ( list != null ) {</span>
+<span class="fc" id="L35">                notesListDTO.setNotes( new ArrayList&lt;Note&gt;( list ) );</span>
+            }
+        }
+
+<span class="fc" id="L39">        return notesListDTO;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

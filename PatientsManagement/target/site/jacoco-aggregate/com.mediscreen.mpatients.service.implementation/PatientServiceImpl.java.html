@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mpatients</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mpatients.service.implementation</a> &gt; <span class="el_source">PatientServiceImpl.java</span></div><h1>PatientServiceImpl.java</h1><pre class="source lang-java linenums">package com.mediscreen.mpatients.service.implementation;
+
+import com.mediscreen.mpatients.exception.AlreadyExistException;
+import com.mediscreen.mpatients.exception.NotFoundException;
+import com.mediscreen.mpatients.model.Patient;
+import com.mediscreen.mpatients.repository.PatientRepository;
+import com.mediscreen.mpatients.service.PatientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Gestion des données administratives des patients
+ */
+@Service
+<span class="fc" id="L21">public class PatientServiceImpl implements PatientService {</span>
+
+<span class="fc" id="L23">    private static final Logger LOGGER = LoggerFactory.getLogger(PatientServiceImpl.class);</span>
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Override
+    public List&lt;Patient&gt; getAllPatient() {
+<span class="fc" id="L30">        return patientRepository.findAll();</span>
+    }
+
+    /**
+     * Pour trouver un patient par son id
+     * @param id id
+     * @return le patient s'il a été trouvé / lance une exception sinon
+     */
+    @Override
+    public Patient getPatientById(Integer id) {
+<span class="fc" id="L40">        LOGGER.info(&quot;Recherche patient id &quot; + id);</span>
+<span class="fc" id="L41">        return patientRepository.findById(id)</span>
+<span class="fc" id="L42">                .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L43">                    LOGGER.error(&quot;Patient non trouvé&quot;);</span>
+<span class="fc" id="L44">                    return new NotFoundException(&quot;patientId &quot; + id + &quot; non trouvé&quot;);</span>
+                });
+    }
+
+    /**
+     * Pour trouver un patient par son nom de famille
+     * @param lastName nom
+     * @return la liste de patient
+     */
+    @Override
+    public List&lt;Patient&gt; getPatientByLastName(String lastName) {
+<span class="fc" id="L55">        LOGGER.info(&quot;Recherche patient &quot; + lastName);</span>
+<span class="fc" id="L56">        return patientRepository.findByLastName(lastName);</span>
+    }
+
+    /**
+     * Pour créer un patient / lance une exception si le patient existe déjà
+     * @param lastName Nom
+     * @param firstName Prénom
+     * @param birthDate Date de naissance
+     * @param sex genre
+     * @param address Adresse
+     * @param phone Téléphone
+     * @return Le patient créé
+     */
+    @Override
+    public Patient createPatient(String lastName, String firstName, LocalDate birthDate, String sex, String address, String phone) {
+
+<span class="fc" id="L72">        Optional&lt;Patient&gt; savedPatient = patientRepository</span>
+<span class="fc" id="L73">                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(firstName.trim(), lastName.trim()</span>
+<span class="fc" id="L74">                        , birthDate, sex.trim());</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (savedPatient.isPresent()) {</span>
+<span class="fc" id="L76">            LOGGER.error(&quot;Patient à créer déjà en base - id : &quot; + savedPatient.get().getPatientId());</span>
+<span class="fc" id="L77">            throw new AlreadyExistException(&quot;Un patient existe déjà avec ces mêmes données clé (patientId &quot; + savedPatient.get().getPatientId()+ &quot;)&quot;);</span>
+        }
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        Patient patient = new Patient(firstName.trim(), lastName.trim(), birthDate, sex.trim()</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">                , address  == null ? null : address.trim(), phone  == null ? null : phone.trim());</span>
+<span class="fc" id="L81">        return patientRepository.save(patient);</span>
+
+    }
+
+    /**
+     * Pour mettre à jour les données administratives d'un patient
+     * @param patient les données du patient
+     * @return Patient mis à jour
+     */
+    @Override
+    public Patient updatePatient(Patient patient) {
+        //Vérifie si le patient existe bien (lance une exception AlreadyExistException sinon)
+<span class="fc" id="L93">        getPatientById(patient.getPatientId());</span>
+
+        //Vérifie si la clé unique est modifiée et les nouvelles données ne sont pas déjà utilisées
+<span class="fc" id="L96">        Optional&lt;Patient&gt; savedPatient = patientRepository</span>
+<span class="fc" id="L97">                .findPatientByFirstNameAndLastNameAndBirthDateAndSex(patient.getFirstName().trim(), patient.getLastName().trim()</span>
+<span class="fc" id="L98">                        , patient.getBirthDate(), patient.getSex().trim());</span>
+
+<span class="pc bpc" id="L100" title="1 of 4 branches missed.">        if (savedPatient.isPresent() &amp;&amp; !savedPatient.get().getPatientId().equals(patient.getPatientId())) {</span>
+<span class="fc" id="L101">            LOGGER.error(&quot;Patient à mettre à jour (id: &quot;+ patient.getPatientId() + &quot;) existe déjà en base sou sun autre id - id : &quot; + savedPatient.get().getPatientId());</span>
+<span class="fc" id="L102">            throw new AlreadyExistException(&quot;Un patient existe déjà avec ces mêmes données clé (patientId &quot; + savedPatient.get().getPatientId()+ &quot;)&quot;);</span>
+        }
+
+<span class="fc" id="L105">        return patientRepository.save(cleanPatient(patient));</span>
+    }
+
+    /**
+     * Applique un trim() sur les données &quot;String&quot; du patient
+     * @param patient le patient à traiter
+     * @return le patient sans blanc inutile
+     */
+    private Patient cleanPatient(Patient patient) {
+<span class="fc" id="L114">        return new Patient (patient.getPatientId(), patient.getFirstName().trim(), patient.getLastName().trim(), patient.getBirthDate()</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">                , patient.getSex().trim(), patient.getHomeAddress() == null ? null : patient.getHomeAddress().trim()</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                , patient.getPhoneNumber() == null ? null : patient.getPhoneNumber().trim());</span>
+    }
+    /**
+     * Pour supprimer un patient identifié par son id/ lance une exception si le patient n'a pas été trouvé
+     * @param id id
+     */
+    @Override
+    public void deletePatient(Integer id) {
+<span class="nc" id="L124">        patientRepository.delete(getPatientById(id));</span>
+<span class="nc" id="L125">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

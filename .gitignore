@@ -1,9 +1,7 @@
-MediscreenWebApp/HELP.md
-**/target/
-!**/target/site/jacoco-aggregate
-!**/.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*/HELP.md
+*/logs
+**/.mvn
+*/mvnw*
 
 ### STS ###
 .apt_generated

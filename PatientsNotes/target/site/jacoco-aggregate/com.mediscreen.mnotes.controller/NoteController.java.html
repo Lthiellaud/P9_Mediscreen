@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NoteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mnotes</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mnotes.controller</a> &gt; <span class="el_source">NoteController.java</span></div><h1>NoteController.java</h1><pre class="source lang-java linenums">package com.mediscreen.mnotes.controller;
+
+import com.mediscreen.mnotes.model.Note;
+import com.mediscreen.mnotes.model.Triggers;
+import com.mediscreen.mnotes.service.NoteService;
+import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+
+@Api(&quot;API pour gérer les notes prises par les médecins&quot;)
+@RestController
+<span class="fc" id="L18">public class NoteController {</span>
+    
+    @Autowired
+    private NoteService noteService;
+
+<span class="fc" id="L23">    private static final Logger LOGGER = LoggerFactory.getLogger(NoteController.class);</span>
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = &quot;Liste des notes prises pour un patient&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Success|OK&quot;)})
+    @GetMapping(value = &quot;/patHistory/notesByPatientId/{id}&quot;)
+    public List&lt;Note&gt; getAllNotesByPatientId(@ApiParam(value = &quot;Id du patient&quot;) @PathVariable Integer id) {
+<span class="fc" id="L31">        return noteService.getAllNotesByPatientId(id);</span>
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = &quot;Décompte des mots clés dans les notes d'un patient&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Success|OK&quot;)})
+    @PostMapping(value = &quot;/patHistory/countNotesByPatientId/{id}&quot;)
+    public Long countNotesByPatientIdWithTrigger(@ApiParam(value = &quot;Id du patient&quot;) @PathVariable Integer id,
+                                                 @ApiParam(value = &quot;Liste mots clé&quot;) @RequestBody Triggers triggers) {
+<span class="fc" id="L41">        return noteService.countNoteByPatientWithTrigger(id, triggers);</span>
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = &quot;Récupération d'une note à partir de son Id&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Success|OK&quot;),
+            @ApiResponse(code = 404, message = &quot;noteId {noteId} non trouvé&quot;),
+            @ApiResponse(code = 400, message = &quot;Bad request&quot;)})
+    @GetMapping(value = &quot;/patHistory/noteById/{id}&quot;)
+    public Note getNoteById(@ApiParam(value = &quot;Id de la note&quot;) @PathVariable String id) {
+<span class="fc" id="L52">        return noteService.getNoteById(id);</span>
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = &quot;Liste de l'ensemble des notes de la base&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Success|OK&quot;)})
+    @GetMapping(value = &quot;/patHistory/all&quot;)
+    public List&lt;Note&gt; getAllNotes() {
+<span class="fc" id="L61">        return noteService.getAllNotes();</span>
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = &quot;Création d'une nouvelle note pour le patient {patId}&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = &quot;Created&quot;),
+            @ApiResponse(code = 400, message = &quot;Bad request&quot;)})
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = &quot;/patHistory/add&quot;)
+    public Note createNote(@ApiParam(value = &quot;Id du patient&quot;) @RequestParam(&quot;patientId&quot;) Integer patientId,
+                           @ApiParam(value = &quot;Note du médecin&quot;) @RequestParam(&quot;note&quot;) String note) {
+<span class="fc" id="L73">        LOGGER.info(&quot;Note à ajouter pour le Patient id &quot; + patientId);</span>
+<span class="fc" id="L74">        return noteService.createNote(patientId, note);</span>
+    }
+
+    /*--------------------------------------------------------------------------------*/
+    @ApiOperation(value = &quot;Mise à jour d'une note pour le patient&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Success|OK&quot;),
+            @ApiResponse(code = 404, message = &quot;note Id {noteId} non trouvée&quot;),
+            @ApiResponse(code = 400, message = &quot;Bad request&quot;)})
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = &quot;/patHistory/update&quot;)
+    public Note updateNote(@ApiParam(value = &quot;Objet Note mis à jour (à enregistrer)&quot;) @RequestBody Note note) {
+<span class="fc" id="L86">        LOGGER.info(&quot;Note &quot;+ note.getId() + &quot; à mettre à jour pour le Patient id &quot; + note.getPatientId());</span>
+<span class="fc" id="L87">        return noteService.updateNote(note);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

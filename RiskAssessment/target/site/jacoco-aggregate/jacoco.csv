@@ -1,0 +1,14 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+massessment,com.mediscreen.massessment.model.constant,KeyWords,0,136,0,0,0,16,0,3,0,3
+massessment,com.mediscreen.massessment.model.constant,RiskLevel,0,59,0,0,0,9,0,3,0,3
+massessment,com.mediscreen.massessment.model.constant,PivotAge,3,4,0,0,1,1,1,1,1,1
+massessment,com.mediscreen.massessment.configuration,FeignExceptionConfig,0,7,0,0,0,2,0,2,0,2
+massessment,com.mediscreen.massessment.configuration,SwaggerConfig,0,17,0,0,0,7,0,2,0,2
+massessment,com.mediscreen.massessment,MassessmentApplication,5,3,0,0,2,1,1,1,1,1
+massessment,com.mediscreen.massessment.controller,RiskAssessmentController,0,8,0,0,0,2,0,2,0,2
+massessment,com.mediscreen.massessment.service.implementation,RiskAssessmentServiceImpl,3,112,2,26,1,18,2,16,0,4
+massessment,com.mediscreen.massessment.utils,AssessmentUtil,0,15,0,0,0,5,0,1,0,1
+massessment,com.mediscreen.massessment.utils,DateUtil,0,8,0,0,0,2,0,1,0,1
+massessment,com.mediscreen.massessment.exception,ExceptionResponseBody,0,3,0,0,0,1,0,1,0,1
+massessment,com.mediscreen.massessment.exception,NotFoundException,0,4,0,0,0,2,0,1,0,1
+massessment,com.mediscreen.massessment.exception,CustomErrorDecoder,3,45,1,3,2,10,1,4,0,3
