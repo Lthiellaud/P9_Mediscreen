@@ -55,8 +55,8 @@ class NoteControllerTest {
         mockMvc.perform(get("/patHistory/allByPatient/1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
-                .andExpect(content().string(containsString("Nom : Lucas Ferguson")))
-                .andExpect(content().string(containsString("Sexe : M / Date de naissance : 1980-01-01")))
+                .andExpect(content().string(containsString("<strong>Nom : </strong><span>Lucas Ferguson</span>")))
+                .andExpect(content().string(containsString("<strong>Date de naissance : </strong><span>1980-01-01</span>")))
                 .andDo(print());
     }
 
@@ -69,7 +69,9 @@ class NoteControllerTest {
                 .andExpect(status().is(302))
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(model().hasNoErrors())
-                .andExpect(flash().attribute("message", "Non trouvé"));
+                .andExpect(flash().attribute("message", "Non trouvé"))
+                .andExpect(flash().attribute("messageType", "error"))
+                .andDo(print());
     }
 
     @Test
@@ -81,6 +83,7 @@ class NoteControllerTest {
                 .andExpect(status().is(302))
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard"));
     }
 
@@ -91,8 +94,8 @@ class NoteControllerTest {
         mockMvc.perform(get("/patHistory/update/1/NoteId"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
-                .andExpect(content().string(containsString("Nom : Lucas Ferguson")))
-                .andExpect(content().string(containsString("Sexe : M / Date de naissance : 1980-01-01")))
+                .andExpect(content().string(containsString("<strong>Nom : </strong><span>Lucas Ferguson</span>")))
+                .andExpect(content().string(containsString("<strong>Date de naissance : </strong><span>1980-01-01</span>")))
                 .andExpect(content().string(containsString("Texte de la note")))
                 .andDo(print());
     }
@@ -106,6 +109,7 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patHistory/allByPatient/1"))
                 .andDo(print())
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Note non trouvée"));
     }
 
@@ -118,6 +122,7 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patHistory/allByPatient/1"))
                 .andDo(print())
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard"));
     }
 
@@ -138,6 +143,7 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patHistory/allByPatient/1"))
                 .andDo(print())
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "success"))
                 .andExpect(flash().attribute("message", "Note mise à jour pour le patient id 1"));
     }
 
@@ -205,8 +211,8 @@ class NoteControllerTest {
         mockMvc.perform(get("/patHistory/add/1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
-                .andExpect(content().string(containsString("Nom : Lucas Ferguson")))
-                .andExpect(content().string(containsString("Sexe : M / Date de naissance : 1980-01-01")))
+                .andExpect(content().string(containsString("<strong>Nom : </strong><span>Lucas Ferguson</span>")))
+                .andExpect(content().string(containsString("<strong>Date de naissance : </strong><span>1980-01-01</span>")))
                 .andExpect(content().string(containsString("Texte de la note à ajouter :")))
                 .andDo(print());
     }
@@ -221,6 +227,7 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patHistory/allByPatient/1"))
                 .andDo(print())
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Note non trouvée"));
     }
 
@@ -234,6 +241,7 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patHistory/allByPatient/1"))
                 .andDo(print())
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard"));
     }
 
@@ -254,6 +262,7 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patHistory/allByPatient/1"))
                 .andDo(print())
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "success"))
                 .andExpect(flash().attribute("message", "Note ajoutée pour le patient id 1"));
     }
 
@@ -291,6 +300,7 @@ class NoteControllerTest {
                 .andExpect(view().name("redirect:/patHistory/allByPatient/1"))
                 .andDo(print())
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème lors de la création de la note, réessayer plus tard"));
     }
 
