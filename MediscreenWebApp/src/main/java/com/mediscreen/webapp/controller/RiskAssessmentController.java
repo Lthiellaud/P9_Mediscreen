@@ -34,9 +34,11 @@ public class RiskAssessmentController {
             return "assessment/get";
         } catch (NotFoundException e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", e.getMessage());
         } catch (Exception e) {
             LOGGER.error("Problème lors de la récupération des données " + e.toString());
+            attributes.addFlashAttribute("messageType", "error");
             attributes.addFlashAttribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard");
         }
         return "redirect:/patient/list";

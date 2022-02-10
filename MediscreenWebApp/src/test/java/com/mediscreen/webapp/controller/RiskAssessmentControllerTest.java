@@ -56,6 +56,7 @@ class RiskAssessmentControllerTest {
         mockMvc.perform(get("/assessment/1"))
                 .andExpect(status().is(302))
                 .andExpect(redirectedUrl("/patient/list"))
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "patient non trouvé"))
                 .andDo(print());
 
@@ -69,6 +70,7 @@ class RiskAssessmentControllerTest {
         mockMvc.perform(get("/assessment/1"))
                 .andExpect(status().is(302))
                 .andExpect(redirectedUrl("/patient/list"))
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard"))
                 .andDo(print());
 
