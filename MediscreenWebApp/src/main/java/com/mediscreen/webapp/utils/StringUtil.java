@@ -8,7 +8,6 @@ public final class StringUtil {
     }
 
     public static String nettoyerTags(String note) {
-        System.out.println(note.replaceAll("\\<.*?\\>", ""));
         return note.replaceAll("\\<.*?\\>", "");
     }
 

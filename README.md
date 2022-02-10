@@ -24,7 +24,8 @@ Elle contient 4 modules :
     *   Lombok (1.18.18)
     *   Swagger (2.8.0)
     *   Mapstruct (1.4.2.Final)
--   `Bootstrap`
+-   `Bootstrap` (version 3.4.1)
+-   `Summernote` (version 0.8.18)
 -   `Base de données MySQL` (version 8.0.22)
 -   `Base de données MongoDB` (version 4.2.17)
 -   `Docker`

@@ -51,6 +51,7 @@ class PatientControllerTest {
                 .param("homeAddress","2 Warren Street ")
                 .param("phoneNumber","387-866-1399"))
                 .andExpect(status().is(302))
+                .andExpect(flash().attribute("messageType", "success"))
                 .andExpect(flash().attribute("message", "Patient mis à jour"))
                 .andExpect(redirectedUrl("/patient/list"))
                 .andDo(print());
@@ -112,6 +113,7 @@ class PatientControllerTest {
                 .param("phoneNumber","387-866-1399"))
                 .andExpect(status().is(302))
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "patientId 1 non trouvé"))
                 .andExpect(redirectedUrl("/patient/list"))
                 .andDo(print());
@@ -133,6 +135,7 @@ class PatientControllerTest {
                 .param("phoneNumber","387-866-1399"))
                 .andExpect(status().is(302))
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème pendant la mise à jour, réessayer plus tard"))
                 .andExpect(redirectedUrl("/patient/list"))
                 .andDo(print());
@@ -161,6 +164,7 @@ class PatientControllerTest {
                 .andExpect(status().is(302))
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Non trouvé"));
 
         verify(patientManagementProxy, times(1)).getPatientById(1);
@@ -173,6 +177,7 @@ class PatientControllerTest {
                 .andExpect(status().is(302))
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème lors de la récupération des données, Merci de réessayer plus tard"));
 
         verify(patientManagementProxy, times(1)).getPatientById(1);
@@ -201,6 +206,7 @@ class PatientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("patient/add"))
                 .andExpect(model().hasNoErrors())
+                .andExpect(model().attribute("messageType", "success"))
                 .andExpect(model().attribute("message", "Patient id 1 créé"));
     }
 
@@ -219,6 +225,7 @@ class PatientControllerTest {
                 .andExpect(status().is(302))
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "patientId 1 existe déjà"));
     }
 
@@ -237,6 +244,7 @@ class PatientControllerTest {
                 .andExpect(status().is(302))
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(model().hasNoErrors())
+                .andExpect(flash().attribute("messageType", "error"))
                 .andExpect(flash().attribute("message", "Problème lors de la création du patient, réessayer plus tard"));
     }
 
