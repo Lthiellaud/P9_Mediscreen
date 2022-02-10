@@ -14,19 +14,18 @@
 </head>
 <body>
 <div class="container">
-	<div class="row"><p><span><br/></span></p></div>
+	<div class="row"><p><br/></p></div>
 	<div class="row bg-info">
 		<h4 style="color: #0056b3;"><strong>Liste des notes de l'ensemble des patients</strong></h4>
 	</div>
+	<div class="row"><p><br/></p></div>
 	<div class="row">
 		<div class="col-sm-12">
 			<a class="btn btn-danger btn-sm" href="/home">Retour</a>
 		</div>
 	</div>
-	<div class="row">
-		<p th:if="${message != null}" th:text="${message}" style="color: red;">Result message</p>
-		<p th:unless="${message != null}">&nbsp;</p>
-	</div>
+
+	<div class="row"><p><br/></p></div>
 	<div class="row">
 		<table class="table table-bordered">
 			<thead>
@@ -42,8 +41,8 @@
 				</tr>
 				<tr th:each="note :${notes}">
 					<td class="col-md-1"><span th:text="${note.patientId}"> Id Patient </span></td>
-					<td class="col-md-10"><span th:text="${note.noteDate}"> Date </span></td>
-					<td class="col-md-1"><span th:text="${note.noteText}"> Note </span></td>
+					<td class="col-md-1"><span th:text="${note.noteDate}"> Date </span></td>
+					<td class="col-md-10"><span th:utext="${note.noteText}"> Note </span></td>
 				</tr>
 			</tbody>
 		</table>

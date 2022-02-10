@@ -2,6 +2,14 @@
 */logs
 **/.mvn
 */mvnw*
+MediscreenWebApp/target/*
+!MediscreenWebApp/target/site/jacoco-aggregate
+PatientsManagement/target/*
+!PatientsManagement/target/site/jacoco-aggregate
+RiskAssessment/target/*
+!RiskAssessment/target/site/jacoco-aggregate
+PatientsNotes/target/*
+!PatientsNotes/target/site/jacoco-aggregate
 
 ### STS ###
 .apt_generated
